@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:showIn="@layout/fragment_schedule">
 
     <android.support.v7.widget.CardView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="-36dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
         app:cardBackgroundColor="@color/colorAccent"
         app:cardElevation="8dp">
 
@@ -27,7 +29,7 @@
         android:id="@+id/login_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -44,95 +46,153 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:layout_marginLeft="96dp"
-                android:layout_marginStart="96dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="12dp"
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingStart="8dp"
-                android:text="@string/login_title"
+                android:text="My task"
                 android:textStyle="normal" />
 
-            <LinearLayout
+            <CheckBox
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_margin="16dp"
                     android:layout_marginBottom="4dp"
-                    android:contentDescription="@string/username"
-                    android:tint="#555"
-                    app:srcCompat="@drawable/ic_face_24dp" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/username_container"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="1">
+                android:drawableLeft="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:drawableStart="@android:color/transparent"
+                android:text="Nullam vulputate libero tortor dindinn"
+                android:textColor="#555"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/username"
-                        android:inputType="text" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-            <LinearLayout
+            <CheckBox
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:contentDescription="@string/password"
-                    android:tint="#555"
-                    app:srcCompat="@drawable/ic_lock_outline_24dp" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/password_container"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/passowrd"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:inputType="text" />
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-            <Button
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:layout_marginTop="24dp"
-                android:paddingBottom="24dp"
-                android:paddingLeft="54dp"
-                android:paddingRight="54dp"
-                android:paddingTop="24dp"
-                android:text="@string/send" />
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:drawableLeft="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:drawableStart="@android:color/transparent"
+                android:text="Lorem ipsum dolor sit amet, elit tortor"
+                android:textColor="#555"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="16dp"
+                android:text="View completed task (3)"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:background="#f6f7f7"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/email_singup"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="Add a reply"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#555"
+                    android:textColorHint="#555"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:gravity="end">
+
+                <ImageButton
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/icon"
+                    android:tint="#555"
+                    app:srcCompat="@drawable/ic_mic_24dp" />
+
+                <ImageButton
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/icon"
+                    android:tint="#555"
+                    app:srcCompat="@drawable/ic_gesture_24dp" />
+
+                <ImageButton
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/icon"
+                    android:tint="#555"
+                    app:srcCompat="@drawable/ic_brush_24dp" />
+
+                <ImageButton
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/icon"
+                    android:tint="#555"
+                    app:srcCompat="@drawable/ic_image_24dp" />
+            </LinearLayout>
         </LinearLayout>
 
+        <ImageButton
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:layout_margin="8dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/icon"
+            android:tint="#555"
+            app:srcCompat="@drawable/ic_done_24dp" />
     </android.support.v7.widget.CardView>
 </LinearLayout>
