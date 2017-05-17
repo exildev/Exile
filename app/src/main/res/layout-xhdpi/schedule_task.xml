@@ -18,10 +18,10 @@
         style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
         android:text="May 16"
         android:textColor="#90a4ae"
         android:textStyle="bold" />
@@ -71,6 +71,14 @@
                     android:text="35th Avenue"
                     android:textColor="#90a4ae"
                     android:textStyle="bold" />
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See on Maps"
+                    android:textColor="#4dd0e1"
+                    android:textStyle="italic" />
             </LinearLayout>
         </LinearLayout>
 

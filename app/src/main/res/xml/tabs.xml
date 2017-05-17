@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@drawable/ic_format_list_numbered_24dp"
+        id="@+id/navigation_tasks"
+        title="@string/tasks" />
+
+    <tab
+        icon="@drawable/ic_chat_24dp"
+        id="@+id/navigation_chat"
+        title="@string/chat" />
+
+    <tab
+        icon="@drawable/ic_report_24dp"
+        id="@+id/navigation_report"
+        title="@string/reports" />
+
+    <tab
+        icon="@drawable/ic_person_24dp"
+        id="@+id/navigation_profile"
+        title="@string/profile" />
+</tabs>
