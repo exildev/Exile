@@ -1,14 +1,18 @@
 package co.com.exile.exile;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.annotation.IdRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarTab;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import co.com.exile.exile.task.TasksFragmetPagerAdapter;
 
@@ -16,27 +20,38 @@ public class MainActivity extends AppCompatActivity {
 
     TasksFragmetPagerAdapter tasksAdapter;
     private ViewPager mViewPager;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private FloatingActionButton fab;
+    private FrameLayout fragmentContainer;
+    private TabLayout tabs;
 
+    private OnTabSelectListener tabSelectListener = new OnTabSelectListener() {
         @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
+        public void onTabSelected(@IdRes int tabId) {
+            switch (tabId) {
                 case R.id.navigation_tasks:
                     mViewPager.setVisibility(View.VISIBLE);
                     if (tasksAdapter == null) {
                         tasksAdapter = new TasksFragmetPagerAdapter(getSupportFragmentManager());
                     }
                     mViewPager.setAdapter(tasksAdapter);
-                    return true;
+                    fragmentContainer.setVisibility(View.GONE);
+                    fab.hide();
+                    tabs.setVisibility(View.VISIBLE);
+                    break;
                 case R.id.navigation_report:
-                    return true;
-                case R.id.navigation_notifications:
-                    return true;
+                    fragmentContainer.setVisibility(View.VISIBLE);
+                    mViewPager.setVisibility(View.GONE);
+                    fab.show();
+                    tabs.setVisibility(View.GONE);
+                    break;
+                case R.id.navigation_chat:
+                    fragmentContainer.setVisibility(View.VISIBLE);
+                    mViewPager.setVisibility(View.GONE);
+                    fab.show();
+                    tabs.setVisibility(View.GONE);
+                    break;
             }
-            return true;
         }
-
     };
 
     @Override
@@ -48,12 +63,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.setupWithViewPager(mViewPager);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_tasks);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
+
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(tabSelectListener);
+
+        BottomBarTab nearby = bottomBar.getTabWithId(R.id.navigation_chat);
+        nearby.setBadgeCount(5);
+
     }
 
 }
