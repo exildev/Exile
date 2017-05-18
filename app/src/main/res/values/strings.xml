@@ -2,7 +2,7 @@
     <string name="app_name">Exile</string>
     <string name="action_settings">Settings</string>
     <string name="background">background</string>
-    <string name="title_activity_main">Tareas</string>
+    <string name="title_activity_main">Exile</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notificaciones</string>
