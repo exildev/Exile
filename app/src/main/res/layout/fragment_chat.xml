@@ -10,7 +10,9 @@
         android:orientation="vertical"
         android:paddingTop="8dp">
 
-        <include layout="@layout/chat" />
+        <include
+            android:id="@+id/chat1"
+            layout="@layout/chat" />
 
         <include layout="@layout/chat" />
 
