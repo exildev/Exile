@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -22,6 +23,7 @@
         app:cardCornerRadius="8dp">
 
         <LinearLayout
+            android:id="@+id/login_ly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -98,11 +100,11 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/passowrd"
+                        android:id="@+id/password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
-                        android:inputType="text" />
+                        android:inputType="textPassword" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -113,6 +115,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
                 android:layout_marginTop="24dp"
+                android:onClick="login"
                 android:paddingBottom="24dp"
                 android:paddingLeft="54dp"
                 android:paddingRight="54dp"
@@ -120,6 +123,14 @@
                 android:text="@string/send" />
 
         </LinearLayout>
+
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
     </android.support.v7.widget.CardView>
 

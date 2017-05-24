@@ -13,7 +13,7 @@
     <string name="login_title">Inicio de sesión</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="send">let\'s go</string>
+    <string name="send">Login</string>
     <string name="title_activity_tab">TabActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
