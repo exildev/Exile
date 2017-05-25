@@ -1,10 +1,11 @@
 package co.com.exile.exile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -27,6 +28,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        autoLogin();
+    }
+
+    private void autoLogin() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.username), null);
+        String password = sharedPref.getString(getString(R.string.password), null);
+
+        if (username != null && password != null) {
+            login(username, password);
+        }
     }
 
     public void login(View view) {
@@ -44,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         saveAccount(username, password);
-                        hideLoading();
                         initMain();
                     }
                 },
@@ -74,12 +85,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoading() {
         findViewById(R.id.login_ly).setVisibility(View.INVISIBLE);
-        ((ContentLoadingProgressBar) findViewById(R.id.loading)).show();
+        (findViewById(R.id.loading)).setVisibility(View.VISIBLE);
     }
 
     private void hideLoading() {
         findViewById(R.id.login_ly).setVisibility(View.VISIBLE);
-        ((ContentLoadingProgressBar) findViewById(R.id.loading)).hide();
+        (findViewById(R.id.loading)).setVisibility(View.GONE);
     }
 
     private void initMain() {
@@ -87,6 +98,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveAccount(String username, String password) {
-
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.username), username);
+        editor.putString(getString(R.string.password), password);
+        editor.apply();
     }
 }
