@@ -22,4 +22,5 @@
     <string name="icon">icono</string>
     <string name="add">add</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="message_hint">Escribir mensaje</string>
 </resources>

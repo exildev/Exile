@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e5ddd5"
+    android:background="#eee"
     tools:context="co.com.exile.exile.chat.ChatActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -75,6 +75,17 @@
 
     <include layout="@layout/content_chat" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="8dp"
+        android:tint="@android:color/white"
+        app:elevation="3dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_mic_24dp" />
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -102,8 +113,9 @@
                 android:layout_marginStart="8dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:contentDescription="@null"
                 android:tint="#555"
-                app:srcCompat="@drawable/ic_emoji_24dp" />
+                app:srcCompat="@drawable/ic_attach_file_24dp" />
 
             <co.com.exile.exile.chat.GifEditText
                 android:id="@+id/message_input"
@@ -111,19 +123,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Escribir mensaje"
+                android:hint="@string/message_hint"
                 android:inputType="textShortMessage|textAutoComplete" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:tint="#555"
-                app:srcCompat="@drawable/ic_attach_file_24dp" />
 
             <ImageView
                 android:id="@+id/take_picture"
@@ -134,21 +135,11 @@
                 android:layout_marginRight="14dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:contentDescription="@null"
                 android:tint="#555"
                 app:srcCompat="@drawable/ic_photo_camera_24dp" />
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="8dp"
-        android:tint="@android:color/white"
-        app:elevation="3dp"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_mic_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
