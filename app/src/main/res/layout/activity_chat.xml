@@ -114,8 +114,9 @@
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:contentDescription="@null"
+                android:onClick="openPicker"
                 android:tint="#555"
-                app:srcCompat="@drawable/ic_attach_file_24dp" />
+                app:srcCompat="@drawable/ic_image_24dp" />
 
             <co.com.exile.exile.chat.GifEditText
                 android:id="@+id/message_input"

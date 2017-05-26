@@ -14,7 +14,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme">ç
+
+        <activity
+            android:name="com.liuguangqiang.ipicker.IPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/IPickerTheme" />
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
