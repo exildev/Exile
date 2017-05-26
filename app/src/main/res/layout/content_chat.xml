@@ -10,6 +10,7 @@
     tools:showIn="@layout/activity_chat">
 
     <LinearLayout
+        android:id="@+id/messages_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -20,7 +21,7 @@
 
         <include layout="@layout/chat_message_you" />
 
-        <include layout="@layout/chat_message_you" />
+        <include layout="@layout/chat_message_me_gif" />
 
         <include layout="@layout/chat_message_me" />
 
@@ -29,6 +30,7 @@
         <include layout="@layout/chat_message_you" />
 
         <include layout="@layout/chat_message_me" />
+
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
