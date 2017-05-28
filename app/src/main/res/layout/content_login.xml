@@ -120,7 +120,7 @@
                 android:paddingLeft="54dp"
                 android:paddingRight="54dp"
                 android:paddingTop="24dp"
-                android:text="@string/send" />
+                android:text="@string/login_send" />
 
         </LinearLayout>
 

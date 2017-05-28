@@ -19,15 +19,19 @@ import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import co.com.exile.exile.chat.ChatFragment;
+import co.com.exile.exile.report.ReportFragmetPagerAdapter;
 import co.com.exile.exile.task.TasksFragmetPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     TasksFragmetPagerAdapter tasksAdapter;
-    private ViewPager mViewPager;
+    ReportFragmetPagerAdapter reportAdapter;
+    private ViewPager mTaskPager;
+    private ViewPager mReportPager;
     private FrameLayout fragmentContainer;
     private TabLayout tabs;
     private AppBarLayout appBar;
+    private BottomBar bottomBar;
     private Menu menu;
 
     private OnTabSelectListener tabSelectListener = new OnTabSelectListener() {
@@ -36,17 +40,10 @@ public class MainActivity extends AppCompatActivity {
             appBar.setExpanded(true);
             switch (tabId) {
                 case R.id.navigation_tasks:
-                    mViewPager.setVisibility(View.VISIBLE);
-                    if (tasksAdapter == null) {
-                        tasksAdapter = new TasksFragmetPagerAdapter(getSupportFragmentManager());
-                    }
-                    mViewPager.setAdapter(tasksAdapter);
-                    fragmentContainer.setVisibility(View.GONE);
-                    hideOption(R.id.nav_add);
-                    tabs.setVisibility(View.VISIBLE);
+                    showViewPager(R.id.navigation_tasks);
                     break;
                 case R.id.navigation_report:
-                    showFragment(-1);
+                    showViewPager(R.id.navigation_report);
                     break;
                 case R.id.navigation_chat:
                     showFragment(R.id.navigation_chat);
@@ -57,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     void showFragment(int fragment) {
         fragmentContainer.setVisibility(View.VISIBLE);
-        mViewPager.setVisibility(View.GONE);
+        mTaskPager.setVisibility(View.GONE);
+        mReportPager.setVisibility(View.GONE);
         showOption(R.id.nav_add);
         tabs.setVisibility(View.GONE);
 
@@ -75,6 +73,33 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    void showViewPager(int option) {
+        if (option == R.id.navigation_tasks) {
+            if (tasksAdapter == null) {
+                tasksAdapter = new TasksFragmetPagerAdapter(getSupportFragmentManager());
+                mTaskPager.setAdapter(tasksAdapter);
+            }
+
+            hideOption(R.id.nav_add);
+            mTaskPager.setVisibility(View.VISIBLE);
+            mReportPager.setVisibility(View.GONE);
+            tabs.setupWithViewPager(mTaskPager);
+        } else if (option == R.id.navigation_report) {
+            if (reportAdapter == null) {
+                reportAdapter = new ReportFragmetPagerAdapter(getSupportFragmentManager());
+                mReportPager.setAdapter(reportAdapter);
+            }
+
+            showOption(R.id.nav_add);
+            mTaskPager.setVisibility(View.GONE);
+            mReportPager.setVisibility(View.VISIBLE);
+            tabs.setupWithViewPager(mReportPager);
+        }
+
+        fragmentContainer.setVisibility(View.GONE);
+        tabs.setVisibility(View.VISIBLE);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,13 +109,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         appBar = (AppBarLayout) findViewById(R.id.appbar);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mTaskPager = (ViewPager) findViewById(R.id.task_pager);
+        mReportPager = (ViewPager) findViewById(R.id.report_pager);
         tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.setupWithViewPager(mViewPager);
+        tabs.setupWithViewPager(mTaskPager);
 
         fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
 
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabSelectListener);
 
         BottomBarTab nearby = bottomBar.getTabWithId(R.id.navigation_chat);
@@ -103,6 +129,21 @@ public class MainActivity extends AppCompatActivity {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.nav_add) {
+
+            switch (bottomBar.getCurrentTabId()) {
+                case R.id.navigation_report:
+                    reportAdapter.addReport(this);
+                    break;
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void hideOption(int id) {

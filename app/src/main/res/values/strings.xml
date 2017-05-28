@@ -13,15 +13,21 @@
     <string name="login_title">Inicio de sesión</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="send">Login</string>
+    <string name="login_send">Login</string>
     <string name="title_activity_tab">TabActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="icon">icono</string>
     <string name="add">add</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="message_hint">Escribir mensaje</string>
     <string name="text_message">😊 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in ex eros.</string>
+    <string name="title_activity_report">Reporte</string>
+    <string name="attach_file">Adjuntar un archivo</string>
+    <string name="send">Enviar</string>
+    <string name="report_name">Nombre</string>
+    <string name="report_type">Tipo</string>
+    <string name="report_place">Lugar</string>
+    <string name="report_client">Cliente</string>
+    <string name="report_description">Descripción</string>
 </resources>
