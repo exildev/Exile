@@ -19,15 +19,22 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
         app:cardBackgroundColor="#7986cb"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="4dp"
         app:cardElevation="2dp">
 
         <pl.droidsonroids.gif.GifImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             android:src="@drawable/gif_test" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_gif" />
     </android.support.v7.widget.CardView>
 </FrameLayout>

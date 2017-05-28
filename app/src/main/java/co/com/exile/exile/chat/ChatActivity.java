@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 
 import com.liuguangqiang.ipicker.IPicker;
 
+import java.io.File;
 import java.io.IOException;
 
 import co.com.exile.exile.R;
@@ -35,6 +36,7 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final String LOG_TAG = "Record";
     private static String mFileName = null;
+
     // Requesting permission to RECORD_AUDIO
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private MediaRecorder mRecorder = null;
@@ -101,7 +103,8 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
             }
         });
 
-        mFileName = getExternalCacheDir().getAbsolutePath();
+        File cacheDir = getExternalCacheDir();
+        mFileName = cacheDir != null ? cacheDir.getAbsolutePath() : "";
         mFileName += "/audiorecordtest.3gp";
     }
 

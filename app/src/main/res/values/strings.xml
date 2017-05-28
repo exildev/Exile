@@ -23,4 +23,5 @@
     <string name="add">add</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="message_hint">Escribir mensaje</string>
+    <string name="text_message">😊 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in ex eros.</string>
 </resources>
