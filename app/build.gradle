@@ -38,5 +38,6 @@ dependencies {
     compile 'com.liuguangqiang.ipicker:library:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.florent37:arclayout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

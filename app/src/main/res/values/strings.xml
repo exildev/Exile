@@ -16,7 +16,6 @@
     <string name="login_send">Login</string>
     <string name="title_activity_tab">TabActivity</string>
 
-
     <string name="icon">icono</string>
     <string name="add">add</string>
     <string name="title_activity_chat">ChatActivity</string>
@@ -30,4 +29,8 @@
     <string name="report_place">Lugar</string>
     <string name="report_client">Cliente</string>
     <string name="report_description">Descripción</string>
+
+    <string name="notifications_title">Notificaciones</string>
+    <string name="account_title">Cuenta</string>
+    <string name="help_title">Ayuda</string>
 </resources>

@@ -19,6 +19,7 @@ import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import co.com.exile.exile.chat.ChatFragment;
+import co.com.exile.exile.profile.ProfileFragment;
 import co.com.exile.exile.report.ReportFragmetPagerAdapter;
 import co.com.exile.exile.task.TasksFragmetPagerAdapter;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private OnTabSelectListener tabSelectListener = new OnTabSelectListener() {
         @Override
         public void onTabSelected(@IdRes int tabId) {
+            getSupportActionBar().show();
             appBar.setExpanded(true);
             switch (tabId) {
                 case R.id.navigation_tasks:
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_chat:
                     showFragment(R.id.navigation_chat);
+                    break;
+                case R.id.navigation_profile:
+                    getSupportActionBar().hide();
+                    showFragment(R.id.navigation_profile);
                     break;
             }
         }
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if (fragment == R.id.navigation_chat) {
             f = new ChatFragment();
         } else {
-            f = new ChatFragment();
+            f = new ProfileFragment();
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
