@@ -47,7 +47,7 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("Sean Spencer");
 
         setSupportActionBar(toolbar);
 

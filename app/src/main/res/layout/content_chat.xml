@@ -15,22 +15,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/chat_message_me" />
+        <include layout="@layout/chat_message_me_audio" />
+
+        <include layout="@layout/chat_message_you_top" />
+
+        <include layout="@layout/chat_message_you_center" />
+
+        <include layout="@layout/chat_message_you_bottom" />
 
         <include layout="@layout/chat_message_me_gif" />
 
-        <include layout="@layout/chat_message_you" />
+        <include layout="@layout/chat_message_me_top" />
 
-        <include layout="@layout/chat_message_me_audio" />
+        <include layout="@layout/chat_message_me_center" />
 
-        <include layout="@layout/chat_message_me" />
-
-        <include layout="@layout/chat_message_you" />
-
-        <include layout="@layout/chat_message_you" />
-
-        <include layout="@layout/chat_message_me" />
-
+        <include layout="@layout/chat_message_me_bottom" />
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
