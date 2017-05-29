@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profile" />
+                android:src="@drawable/profile2" />
 
             <ImageButton
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
@@ -47,7 +47,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Sean Spencer" />
+                android:text="Auria Devney" />
 
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Caption"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:text="\@seanspencer" />
+                android:text="\@auriadevney" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -48,8 +48,13 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Sean Spencer");
-
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 

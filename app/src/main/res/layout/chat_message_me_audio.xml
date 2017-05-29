@@ -32,7 +32,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
-                android:src="@drawable/profile" />
+                android:src="@drawable/profile2" />
 
             <ImageView
                 android:layout_width="50dp"
