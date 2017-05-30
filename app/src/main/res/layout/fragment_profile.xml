@@ -160,13 +160,19 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Ajustes" />
+                android:text="@string/profile_options_subtitle" />
 
-            <include layout="@layout/profile_adjust_account" />
+            <include
+                android:id="@+id/account_button"
+                layout="@layout/profile_adjust_account" />
 
-            <include layout="@layout/profile_adjust_notificactions" />
+            <include
+                android:id="@+id/notification_button"
+                layout="@layout/profile_adjust_notificactions" />
 
-            <include layout="@layout/profile_adjust_help" />
+            <include
+                android:id="@+id/help_button"
+                layout="@layout/profile_adjust_help" />
 
         </LinearLayout>
 

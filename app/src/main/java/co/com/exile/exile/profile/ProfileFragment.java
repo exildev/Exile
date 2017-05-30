@@ -1,6 +1,7 @@
 package co.com.exile.exile.profile;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -50,6 +51,34 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 });
+            }
+        });
+
+        View helpButton = rootView.findViewById(R.id.help_button);
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), HelpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        View accountButton = rootView.findViewById(R.id.account_button);
+        accountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AccountActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        View notificationButton = rootView.findViewById(R.id.notification_button);
+        notificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), NotificationActivity.class);
+                startActivity(intent);
             }
         });
 
