@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            android:tint="#8c72cb"
+            android:tint="@color/chatColor"
             app:srcCompat="@drawable/ic_circle_outline_24dp" />
 
         <ImageView
@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:contentDescription="@null"
-            android:tint="#8c72cb"
+            android:tint="@color/chatColor"
             app:srcCompat="@drawable/ic_check_24dp" />
     </FrameLayout>
 </FrameLayout>

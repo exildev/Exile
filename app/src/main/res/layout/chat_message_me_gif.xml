@@ -18,7 +18,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
-        app:cardBackgroundColor="#8c72cb"
+        app:cardBackgroundColor="@color/chatColor"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp">
 
@@ -50,16 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            android:tint="#8c72cb"
-            app:srcCompat="@drawable/ic_check_circle_24dp" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:contentDescription="@null"
-            android:tint="#8c72cb"
-            android:visibility="gone"
+            android:tint="@color/chatColor"
             app:srcCompat="@drawable/ic_check_circle_24dp" />
     </FrameLayout>
 </FrameLayout>
