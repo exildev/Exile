@@ -20,7 +20,7 @@
             android:contentDescription="@null"
             android:scaleType="centerInside"
             android:tint="?attr/colorPrimary"
-            app:srcCompat="@drawable/ic_report_24dp" />
+            app:srcCompat="@drawable/ic_notifications_black_24dp" />
     </FrameLayout>
 
     <TextView
