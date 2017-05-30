@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import com.roughike.bottombar.BottomBar;
@@ -25,13 +27,14 @@ import co.com.exile.exile.task.TasksFragmetPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    TasksFragmetPagerAdapter tasksAdapter;
-    ReportFragmetPagerAdapter reportAdapter;
+    private TasksFragmetPagerAdapter tasksAdapter;
+    private ReportFragmetPagerAdapter reportAdapter;
     private ViewPager mTaskPager;
     private ViewPager mReportPager;
     private FrameLayout fragmentContainer;
     private TabLayout tabs;
     private AppBarLayout appBar;
+    private Toolbar toolbar;
     private BottomBar bottomBar;
     private Menu menu;
 
@@ -59,22 +62,75 @@ public class MainActivity extends AppCompatActivity {
     };
 
     void showFragment(int fragment) {
-        fragmentContainer.setVisibility(View.VISIBLE);
-        mTaskPager.setVisibility(View.GONE);
-        mReportPager.setVisibility(View.GONE);
-        showOption(R.id.nav_add);
         tabs.setVisibility(View.GONE);
 
         Fragment f;
 
         if (fragment == R.id.navigation_chat) {
             f = new ChatFragment();
+            showOption(R.id.nav_add);
         } else {
             f = new ProfileFragment();
         }
 
+        if (mTaskPager.getVisibility() == View.VISIBLE) {
+            mTaskPager.bringToFront();
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+            Animation fade_out = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+
+            fade_in.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mTaskPager.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            mTaskPager.startAnimation(fade_out);
+            fragmentContainer.startAnimation(fade_in);
+
+        } else if (mReportPager.getVisibility() == View.VISIBLE) {
+            mReportPager.bringToFront();
+            fragmentContainer.setVisibility(View.VISIBLE);
+
+            Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+            Animation fade_out = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+
+            fade_in.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mReportPager.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            mReportPager.startAnimation(fade_out);
+            fragmentContainer.startAnimation(fade_in);
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.fragment_container, f)
                 .commit();
     }
@@ -111,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         appBar = (AppBarLayout) findViewById(R.id.appbar);
