@@ -112,10 +112,6 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
         mFileName += "/audiorecordtest.3gp";
     }
 
-    public void back(View view) {
-        finish();
-    }
-
     public void openPicker(View view) {
         IPicker.setLimit(1);
         IPicker.open(this);
