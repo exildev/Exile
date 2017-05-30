@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void autoLogin() {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("LoginPref", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.username), null);
         String password = sharedPref.getString(getString(R.string.password), null);
 
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveAccount(String username, String password) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("LoginPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.username), username);
         editor.putString(getString(R.string.password), password);

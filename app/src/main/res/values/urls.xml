@@ -2,4 +2,5 @@
 <resources>
     <string name="url">http://104.236.33.228:8000%1$s</string>
     <string name="login">/usuarios/login/</string>
+    <string name="logout">/usuarios/logout/</string>
 </resources>
