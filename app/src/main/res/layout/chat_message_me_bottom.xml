@@ -7,9 +7,9 @@
     android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingEnd="16dp"
-    android:paddingLeft="50dp"
+    android:paddingLeft="58dp"
     android:paddingRight="16dp"
-    android:paddingStart="50dp"
+    android:paddingStart="58dp"
     tools:context="co.com.exile.exile.chat.ChatActivity"
     tools:showIn="@layout/activity_chat">
 
@@ -28,8 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="@string/text_message"
-            android:textColor="@android:color/white" />
+            android:text="@string/text_message" />
     </FrameLayout>
 
     <FrameLayout
