@@ -26,13 +26,21 @@
             android:layout_height="0.5dp"
             android:background="@android:color/darker_gray" />
 
-        <EditText
+        <Spinner
+            android:id="@+id/type_sipinner"
+            style="@style/Widget.AppCompat.Spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/dropdownListPreferredItemHeight"
             android:background="@android:color/transparent"
+            android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
             android:hint="@string/report_type"
             android:maxLines="1"
-            android:padding="16dp" />
+            android:paddingEnd="16dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="16dp"
+            android:paddingStart="12dp"
+            android:popupBackground="@android:color/white"
+            android:stateListAnimator="@drawable/spinner_sla" />
 
         <View
             android:layout_width="match_parent"
