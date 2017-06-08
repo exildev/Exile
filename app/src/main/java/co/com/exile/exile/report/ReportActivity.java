@@ -32,6 +32,9 @@ public class ReportActivity extends AppCompatActivity {
     String[] placesString;
     JSONArray mPlaces;
 
+    String[] clientsString;
+    JSONArray mClients;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class ReportActivity extends AppCompatActivity {
         });
         getTypes();
         getPlaces();
+        getClients();
     }
 
 
@@ -158,6 +162,58 @@ public class ReportActivity extends AppCompatActivity {
         VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
+    private void getClients() {
+        String serviceUrl = getString(R.string.report_clients_url);
+        String url = getString(R.string.url, serviceUrl);
+        getClients(url, 0);
+
+    }
+
+    private void getClients(final String url, final int offset) {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("response", response.toString());
+                        try {
+                            int count = response.getInt("count");
+                            if (clientsString == null) {
+                                clientsString = new String[count + 1];
+                                mClients = new JSONArray();
+                            }
+
+                            JSONArray clients = response.getJSONArray("object_list");
+                            for (int i = 0; i < clients.length(); i++) {
+                                JSONObject client = clients.getJSONObject(i);
+                                clientsString[i + offset] = client.getString("nombre");
+                                mClients.put(client);
+                            }
+
+                            if (response.has("next")) {
+                                String serviceUrl = getString(R.string.report_clients_url);
+                                String url = getString(R.string.url, serviceUrl) + "?page=" + response.getInt("next");
+                                getClients(url, offset + response.getInt("num_rows"));
+                            } else {
+                                renderClients();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse != null && (error.networkResponse.statusCode == 404 || error.networkResponse.statusCode == 400)) {
+                            Snackbar.make(findViewById(R.id.main_container), "usuario y/o contraseña incorrecta", 800).show();
+                        } else {
+                            Snackbar.make(findViewById(R.id.main_container), "Error al hacer la consulta", 800).show();
+                        }
+                    }
+                });
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
+    }
+
     private void renderTypes() {
         typesString[typesString.length - 1] = getString(R.string.report_type);
 
@@ -215,6 +271,35 @@ public class ReportActivity extends AppCompatActivity {
         };
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) findViewById(R.id.place_spinner);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(adapter.getCount());
+    }
+
+    private void renderClients() {
+        clientsString[clientsString.length - 1] = getString(R.string.report_client);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item_selected, clientsString) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+
+                View v = super.getView(position, convertView, parent);
+                if (position == getCount()) {
+                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
+                }
+
+                return v;
+            }
+
+            @Override
+            public int getCount() {
+                return super.getCount() - 1; // you dont display last item. It is used as hint.
+            }
+
+        };
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        final Spinner spinner = (Spinner) findViewById(R.id.client_spinner);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());
     }
