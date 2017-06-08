@@ -9,6 +9,7 @@
     tools:showIn="@layout/activity_report">
 
     <LinearLayout
+        android:id="@+id/form_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -94,10 +95,6 @@
             android:hint="@string/report_description"
             android:inputType="textMultiLine"
             android:padding="16dp" />
-
-        <include layout="@layout/report_attach" />
-
-        <include layout="@layout/report_attach" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

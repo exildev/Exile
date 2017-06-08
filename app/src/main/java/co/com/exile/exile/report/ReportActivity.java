@@ -1,15 +1,20 @@
 package co.com.exile.exile.report;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,10 +22,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.liuguangqiang.ipicker.IPicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
@@ -35,6 +46,16 @@ public class ReportActivity extends AppCompatActivity {
     String[] clientsString;
     JSONArray mClients;
 
+    ArrayList<String> attaches;
+
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "KMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +68,33 @@ public class ReportActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        attaches = new ArrayList<>();
+        IPicker.setLimit(5);
+        IPicker.setOnSelectedListener(new IPicker.OnSelectedListener() {
+            @Override
+            public void onSelected(List<String> paths) {
+                addAttaches(paths);
+            }
+        });
         getTypes();
         getPlaces();
         getClients();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.report_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.nav_attach) {
+            IPicker.open(this, attaches);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void getTypes() {
@@ -302,5 +340,33 @@ public class ReportActivity extends AppCompatActivity {
         final Spinner spinner = (Spinner) findViewById(R.id.client_spinner);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());
+    }
+
+    private void addAttaches(List<String> paths) {
+        attaches.clear();
+        attaches.addAll(paths);
+
+        for (String attach : attaches) {
+            renderAttach(attach);
+        }
+    }
+
+    private void renderAttach(String path) {
+        LinearLayout parent = (LinearLayout) findViewById(R.id.form_container);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View attach = inflater.inflate(R.layout.report_attach, parent, false);
+
+        File image = new File(path);
+
+        ImageView img = (ImageView) attach.findViewById(R.id.attach_image);
+        img.setImageURI(Uri.fromFile(image));
+
+        TextView name = (TextView) attach.findViewById(R.id.attach_name);
+        name.setText(image.getName());
+
+        TextView size = (TextView) attach.findViewById(R.id.attach_size);
+        size.setText(humanReadableByteCount(image.length(), true));
+
+        parent.addView(attach);
     }
 }
