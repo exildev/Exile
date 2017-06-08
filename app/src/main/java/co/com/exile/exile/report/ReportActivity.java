@@ -1,6 +1,7 @@
 package co.com.exile.exile.report;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -369,8 +370,11 @@ public class ReportActivity extends AppCompatActivity {
     private void renderAttach(final ViewGroup parent, final View attach, final String path) {
         File image = new File(path);
 
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
         ImageView img = (ImageView) attach.findViewById(R.id.attach_image);
-        img.setImageURI(Uri.fromFile(image));
+        img.setImageBitmap(bitmap);
 
         TextView name = (TextView) attach.findViewById(R.id.attach_name);
         name.setText(image.getName());
