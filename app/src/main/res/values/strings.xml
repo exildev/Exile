@@ -116,4 +116,6 @@
     <string name="change_password_title">Cambiar contraseña</string>
     <string name="log_out_title">Cerrar sesión</string>
     <string name="profile_options_subtitle">Ajustes</string>
+    <string name="gps_permissions_message">Para que la aplicacion pueda enviar su ubicacion debe conceder permisos para obtenerla ¿Desea hacerlo ahora?</string>
+    <string name="activate_gps_message">Para que la aplicacion pueda enviar su ubicacion debe tener encendido el GPS ¿Desea encenderlo ahora?</string>
 </resources>
