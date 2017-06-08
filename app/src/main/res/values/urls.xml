@@ -4,4 +4,5 @@
     <string name="login">/usuarios/login/empleado/</string>
     <string name="logout">/usuarios/logout/</string>
     <string name="report_type_url">/novedades/tipo/list/</string>
+    <string name="report_places_url">/operacion/lugar/list/</string>
 </resources>
