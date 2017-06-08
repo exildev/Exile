@@ -37,15 +37,13 @@ import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 
 public class ReportActivity extends AppCompatActivity {
+    private static final int MAX_UPLOAD_FILES = 5;
     String[] typesString;
     JSONArray mTypes;
-
     String[] placesString;
     JSONArray mPlaces;
-
     String[] clientsString;
     JSONArray mClients;
-
     ArrayList<String> attaches;
 
     public static String humanReadableByteCount(long bytes, boolean si) {
@@ -70,7 +68,7 @@ public class ReportActivity extends AppCompatActivity {
         });
 
         attaches = new ArrayList<>();
-        IPicker.setLimit(5);
+        IPicker.setLimit(MAX_UPLOAD_FILES);
         IPicker.setOnSelectedListener(new IPicker.OnSelectedListener() {
             @Override
             public void onSelected(List<String> paths) {
@@ -346,16 +344,29 @@ public class ReportActivity extends AppCompatActivity {
         attaches.clear();
         attaches.addAll(paths);
 
-        for (String attach : attaches) {
-            renderAttach(attach);
+        final LinearLayout parent = (LinearLayout) findViewById(R.id.form_container);
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        for (int i = 0; i < MAX_UPLOAD_FILES; i++) {
+            if (attaches.size() > i) {
+                String path = attaches.get(i);
+                View attach;
+                if (parent.getChildCount() > i + 9) {
+                    attach = parent.getChildAt(9 + i);
+                } else {
+                    attach = inflater.inflate(R.layout.report_attach, parent, false);
+                    parent.addView(attach);
+                }
+                renderAttach(parent, attach, path);
+            } else if (parent.getChildCount() > i + 9) {
+                parent.removeViews(9 + i, parent.getChildCount() - (9 + i));
+            } else {
+                break;
+            }
         }
     }
 
-    private void renderAttach(String path) {
-        LinearLayout parent = (LinearLayout) findViewById(R.id.form_container);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View attach = inflater.inflate(R.layout.report_attach, parent, false);
-
+    private void renderAttach(final ViewGroup parent, final View attach, final String path) {
         File image = new File(path);
 
         ImageView img = (ImageView) attach.findViewById(R.id.attach_image);
@@ -367,6 +378,14 @@ public class ReportActivity extends AppCompatActivity {
         TextView size = (TextView) attach.findViewById(R.id.attach_size);
         size.setText(humanReadableByteCount(image.length(), true));
 
-        parent.addView(attach);
+        View delete = attach.findViewById(R.id.attach_delete);
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parent.removeView(attach);
+                attaches.remove(path);
+            }
+        });
     }
 }
