@@ -31,10 +31,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -146,7 +148,11 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
             return true;
         } else if (item.getItemId() == R.id.nav_send) {
             try {
-                sendWithFiles();
+                if (attaches.size() > 0) {
+                    sendWithFiles();
+                } else {
+                    send();
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -577,6 +583,78 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         } else {
             createLocationRequest();
         }
+    }
+
+    private void send() {
+        final EditText name = (EditText) findViewById(R.id.name_et);
+        final Spinner type = (Spinner) findViewById(R.id.type_spinner);
+        final Spinner place = (Spinner) findViewById(R.id.place_spinner);
+        final Spinner client = (Spinner) findViewById(R.id.client_spinner);
+        final EditText description = (EditText) findViewById(R.id.descriptio_et);
+
+        String serviceUrl = getString(R.string.report_url);
+        String url = getString(R.string.url, serviceUrl);
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //hideLoading();
+                        Log.i("reponse", response);
+                        startLocationUpdates();
+                        Snackbar.make(findViewById(R.id.name_et), "Reporte enviado con exito", 800).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        startLocationUpdates();
+                        Snackbar.make(findViewById(R.id.name_et), "Hubo un error al subir el reporte", 800).show();
+                        String str = new String(error.networkResponse.data);
+                        Log.e("sendWithFiles", str);
+                    }
+                }) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                int type_id = 0;
+                int client_id = 0;
+                int place_id = 0;
+                try {
+                    type_id = mTypes.getJSONObject(type.getSelectedItemPosition()).getInt("id");
+                    client_id = mClients.getJSONObject(client.getSelectedItemPosition()).getInt("id");
+                    place_id = mPlaces.getJSONObject(place.getSelectedItemPosition()).getInt("id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONObject body = new JSONObject();
+                try {
+                    body.put("nombre", name.getText().toString())
+                            .put("descripcion", description.getText().toString())
+                            .put("fotoreporte_set-TOTAL_FORMS", "0")
+                            .put("fotoreporte_set-INITIAL_FORMS", "0")
+                            .put("fotoreporte_set-MIN_NUM_FORMS", "0")
+                            .put("fotoreporte_set-MAX_NUM_FORMS", "5");
+
+                    if (type_id != 0) {
+                        body.put("tipo", type_id + "");
+                    }
+                    if (client_id != 0) {
+                        body.put("cliente", client_id + "");
+                    }
+                    if (place_id != 0) {
+                        body.put("lugar", place_id + "");
+                    }
+                    if (mLocation != null) {
+                        body.put("latitud", mLocation.getLatitude() + "")
+                                .put("longitud", mLocation.getLongitude() + "");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return body.toString().getBytes();
+            }
+        };
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
+        //showLoading();
     }
 
     private void sendWithFiles() throws FileNotFoundException {
