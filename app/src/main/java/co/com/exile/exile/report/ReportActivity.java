@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -46,11 +47,19 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.liuguangqiang.ipicker.IPicker;
 
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.ServerResponse;
+import net.gotev.uploadservice.UploadInfo;
+import net.gotev.uploadservice.UploadNotificationConfig;
+import net.gotev.uploadservice.UploadStatusDelegate;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -134,6 +143,13 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.nav_attach) {
             IPicker.open(this, attaches);
+            return true;
+        } else if (item.getItemId() == R.id.nav_send) {
+            try {
+                sendWithFiles();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -560,6 +576,98 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
             }
         } else {
             createLocationRequest();
+        }
+    }
+
+    private void sendWithFiles() throws FileNotFoundException {
+        EditText name = (EditText) findViewById(R.id.name_et);
+        Spinner type = (Spinner) findViewById(R.id.type_spinner);
+        Spinner place = (Spinner) findViewById(R.id.place_spinner);
+        Spinner client = (Spinner) findViewById(R.id.client_spinner);
+        EditText description = (EditText) findViewById(R.id.descriptio_et);
+
+        int type_id = 0;
+        int client_id = 0;
+        int place_id = 0;
+        try {
+            type_id = mTypes.getJSONObject(type.getSelectedItemPosition()).getInt("id");
+            client_id = mClients.getJSONObject(client.getSelectedItemPosition()).getInt("id");
+            place_id = mPlaces.getJSONObject(place.getSelectedItemPosition()).getInt("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        stopLocationUpdates();
+        //showLoading();
+        UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
+                .setTitle("Subiendo reporte")
+                .setInProgressMessage("Subiendo reporte a [[UPLOAD_RATE]] ([[PROGRESS]])")
+                .setErrorMessage("Hubo un error al subir el reporte")
+                .setCompletedMessage("Subida completada exitosamente en [[ELAPSED_TIME]]")
+                .setAutoClearOnSuccess(true);
+
+
+        String serviceUrl = getString(R.string.report_url);
+        String url = getString(R.string.url, serviceUrl);
+        MultipartUploadRequest upload =
+                new MultipartUploadRequest(getBaseContext(), url)
+                        .setNotificationConfig(notificationConfig)
+                        .setAutoDeleteFilesAfterSuccessfulUpload(false)
+                        .setMaxRetries(1)
+                        .addParameter("nombre", name.getText().toString())
+                        .addParameter("descripcion", description.getText().toString())
+                        .addParameter("fotoreporte_set-TOTAL_FORMS", String.valueOf(attaches.size()))
+                        .addParameter("fotoreporte_set-INITIAL_FORMS", "0")
+                        .addParameter("fotoreporte_set-MIN_NUM_FORMS", "0")
+                        .addParameter("fotoreporte_set-MAX_NUM_FORMS", "5");
+        if (type_id != 0) {
+            upload.addParameter("tipo", type_id + "");
+        }
+        if (client_id != 0) {
+            upload.addParameter("cliente", client_id + "");
+        }
+        if (place_id != 0) {
+            upload.addParameter("lugar", place_id + "");
+        }
+        if (mLocation != null) {
+            upload.addParameter("latitud", mLocation.getLatitude() + "")
+                    .addParameter("longitud", mLocation.getLongitude() + "");
+        }
+
+        for (int i = 0; i < attaches.size(); i++) {
+            String image = attaches.get(i);
+            upload.addFileToUpload(image, "fotoreporte_set-" + i + "-reporte");
+        }
+        try {
+            upload.setDelegate(new UploadStatusDelegate() {
+                @Override
+                public void onProgress(UploadInfo uploadInfo) {
+
+                }
+
+                @Override
+                public void onError(UploadInfo uploadInfo, Exception exception) {
+                    //hideLoading();
+                    startLocationUpdates();
+                    Snackbar.make(findViewById(R.id.name_et), "Hubo un error al subir el reporte", 800).show();
+                    Log.e("sendWithFiles", exception.getMessage());
+                }
+
+                @Override
+                public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
+                    //hideLoading();
+                    Log.i("reponse", serverResponse.getBodyAsString());
+                    startLocationUpdates();
+                    Snackbar.make(findViewById(R.id.name_et), "Reporte enviado con exito", 800).show();
+                }
+
+                @Override
+                public void onCancelled(UploadInfo uploadInfo) {
+                }
+            })
+                    .startUpload();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 

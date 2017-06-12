@@ -40,6 +40,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.florent37:arclayout:1.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services-location:10.2.6'
+    compile 'com.google.android.gms:play-services-location:11.0.0'
+    compile 'net.gotev:uploadservice:3.0.3'
     testCompile 'junit:junit:4.12'
 }

@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -89,6 +90,7 @@
             android:background="@android:color/darker_gray" />
 
         <EditText
+            android:id="@+id/descriptio_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
