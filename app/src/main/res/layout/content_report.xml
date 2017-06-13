@@ -4,100 +4,160 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="co.com.exile.exile.report.ReportActivity"
     tools:showIn="@layout/activity_report">
 
-    <LinearLayout
-        android:id="@+id/form_container"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
+        android:layout_marginTop="16dp"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/name_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:hint="@string/report_name"
-            android:maxLines="1"
-            android:padding="16dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray" />
-
-        <Spinner
-            android:id="@+id/type_spinner"
-            style="@style/Widget.AppCompat.Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/dropdownListPreferredItemHeight"
-            android:background="@android:color/transparent"
-            android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
-            android:maxLines="1"
-            android:paddingEnd="16dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="16dp"
-            android:paddingStart="12dp"
-            android:popupBackground="@android:color/white"
-            android:stateListAnimator="@drawable/spinner_sla" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray" />
-
-        <Spinner
-            android:id="@+id/place_spinner"
-            style="@style/Widget.AppCompat.Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/dropdownListPreferredItemHeight"
-            android:background="@android:color/transparent"
-            android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
-            android:maxLines="1"
-            android:paddingEnd="16dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="16dp"
-            android:paddingStart="12dp"
-            android:popupBackground="@android:color/white"
-            android:stateListAnimator="@drawable/spinner_sla" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray" />
-
-        <Spinner
-            android:id="@+id/client_spinner"
-            style="@style/Widget.AppCompat.Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/dropdownListPreferredItemHeight"
-            android:background="@android:color/transparent"
-            android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
-            android:maxLines="1"
-            android:paddingEnd="16dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="16dp"
-            android:paddingStart="12dp"
-            android:popupBackground="@android:color/white"
-            android:stateListAnimator="@drawable/spinner_sla" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray" />
-
-        <EditText
-            android:id="@+id/descriptio_et"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="@android:color/transparent"
-            android:hint="@string/report_description"
-            android:inputType="textMultiLine"
-            android:padding="16dp" />
-    </LinearLayout>
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            app:cardCornerRadius="8dp">
 
+            <LinearLayout
+                android:id="@+id/form_container"
+            android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginStart="72dp"
+                    android:layout_marginTop="11dp"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/report_form_title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/report_attaches" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/attaches_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/name_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/report_name"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="@color/colorAccent"
+                    app:ms_enableErrorLabel="false"
+                    app:ms_enableFloatingLabel="false"
+                    app:ms_hint="@string/report_type" />
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/place_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="@color/colorAccent"
+                    app:ms_enableErrorLabel="false"
+                    app:ms_enableFloatingLabel="false"
+                    app:ms_hint="@string/report_place" />
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/client_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="@color/colorAccent"
+                    app:ms_enableErrorLabel="false"
+                    app:ms_enableFloatingLabel="false"
+                    app:ms_hint="@string/report_place" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/descriptio_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/report_description"
+                        android:inputType="textMultiLine" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="-36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginStart="36dp"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardElevation="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/login_title"
+                android:tint="#fff"
+                app:srcCompat="@drawable/ic_report_24dp" />
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
 </android.support.v4.widget.NestedScrollView>

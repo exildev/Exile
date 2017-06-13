@@ -17,9 +17,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -82,6 +82,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     String[] clientsString;
     JSONArray mClients;
     ArrayList<String> attaches;
+    AttachAdapter attachAdapter;
 
     private GoogleApiClient mGoogleClient;
     private LocationRequest mLocationRequest;
@@ -125,6 +126,14 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                 .addConnectionCallbacks(this)
                 .build();
         mGoogleClient.connect();
+
+        attachAdapter = new AttachAdapter();
+        RecyclerView attachRV = (RecyclerView) findViewById(R.id.attaches_rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        attachRV.setLayoutManager(layoutManager);
+        attachRV.setHasFixedSize(true);
+        attachRV.setAdapter(attachAdapter);
     }
 
     @Override
@@ -227,7 +236,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                         try {
                             int count = response.getInt("count");
                             if (typesString == null) {
-                                typesString = new String[count + 1];
+                                typesString = new String[count];
                                 mTypes = new JSONArray();
                             }
 
@@ -279,7 +288,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                         try {
                             int count = response.getInt("count");
                             if (placesString == null) {
-                                placesString = new String[count + 1];
+                                placesString = new String[count];
                                 mPlaces = new JSONArray();
                             }
 
@@ -331,7 +340,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                         try {
                             int count = response.getInt("count");
                             if (clientsString == null) {
-                                clientsString = new String[count + 1];
+                                clientsString = new String[count];
                                 mClients = new JSONArray();
                             }
 
@@ -368,60 +377,14 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void renderTypes() {
-        typesString[typesString.length - 1] = getString(R.string.report_type);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item_selected, typesString) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-
-                View v = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
-                }
-
-                return v;
-            }
-
-            @Override
-            public int getCount() {
-                return super.getCount() - 1; // you dont display last item. It is used as hint.
-            }
-
-        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, typesString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) findViewById(R.id.type_spinner);
         spinner.setAdapter(adapter);
-        spinner.setSelection(adapter.getCount());
     }
 
     private void renderPlaces() {
-        placesString[placesString.length - 1] = getString(R.string.report_place);
-
-        Log.i("places", placesString[0] + "");
-        Log.i("places", mPlaces.toString());
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item_selected, placesString) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-
-                View v = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
-                }
-
-                return v;
-            }
-
-            @Override
-            public int getCount() {
-                return super.getCount() - 1; // you dont display last item. It is used as hint.
-            }
-
-        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, placesString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) findViewById(R.id.place_spinner);
         spinner.setAdapter(adapter);
@@ -429,28 +392,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void renderClients() {
-        clientsString[clientsString.length - 1] = getString(R.string.report_client);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item_selected, clientsString) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-
-                View v = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
-                }
-
-                return v;
-            }
-
-            @Override
-            public int getCount() {
-                return super.getCount() - 1; // you dont display last item. It is used as hint.
-            }
-
-        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clientsString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) findViewById(R.id.client_spinner);
         spinner.setAdapter(adapter);
@@ -461,26 +403,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         attaches.clear();
         attaches.addAll(paths);
 
-        final LinearLayout parent = (LinearLayout) findViewById(R.id.form_container);
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        for (int i = 0; i < MAX_UPLOAD_FILES; i++) {
-            if (attaches.size() > i) {
-                String path = attaches.get(i);
-                View attach;
-                if (parent.getChildCount() > i + 9) {
-                    attach = parent.getChildAt(9 + i);
-                } else {
-                    attach = inflater.inflate(R.layout.report_attach, parent, false);
-                    parent.addView(attach);
-                }
-                renderAttach(parent, attach, path);
-            } else if (parent.getChildCount() > i + 9) {
-                parent.removeViews(9 + i, parent.getChildCount() - (9 + i));
-            } else {
-                break;
-            }
-        }
+        attachAdapter.setAttaches(attaches);
     }
 
     private void renderAttach(final ViewGroup parent, final View attach, final String path) {
