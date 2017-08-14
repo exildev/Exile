@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,18 +16,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -59,7 +54,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -68,12 +62,12 @@ import java.util.Locale;
 
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
+import moe.feng.common.stepperview.VerticalStepperItemView;
 
 public class ReportActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 3;
     private static final int REQUEST_LOCATION_SETTINGS = 12;
-
     private static final int MAX_UPLOAD_FILES = 5;
     String[] typesString;
     JSONArray mTypes;
@@ -83,7 +77,9 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     JSONArray mClients;
     ArrayList<String> attaches;
     AttachAdapter attachAdapter;
-
+    private VerticalStepperItemView mSteppers[] = new VerticalStepperItemView[3];
+    private int mActivatedColorRes = R.color.material_blue_500;
+    private int mDoneIconRes = R.drawable.ic_done_white_16dp;
     private GoogleApiClient mGoogleClient;
     private LocationRequest mLocationRequest;
     private Location mLocation;
@@ -100,7 +96,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,12 +124,62 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         mGoogleClient.connect();
 
         attachAdapter = new AttachAdapter();
-        RecyclerView attachRV = (RecyclerView) findViewById(R.id.attaches_rv);
+        //RecyclerView attachRV = findViewById(R.id.attaches_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        attachRV.setLayoutManager(layoutManager);
-        attachRV.setHasFixedSize(true);
-        attachRV.setAdapter(attachAdapter);
+        //attachRV.setLayoutManager(layoutManager);
+        //attachRV.setHasFixedSize(true);
+        //attachRV.setAdapter(attachAdapter);
+
+        setStepper();
+    }
+
+    void setStepper() {
+        mSteppers[0] = findViewById(R.id.stepper_0);
+        mSteppers[1] = findViewById(R.id.stepper_1);
+        mSteppers[2] = findViewById(R.id.stepper_2);
+
+        VerticalStepperItemView.bindSteppers(mSteppers);
+
+        Button mNextBtn0 = findViewById(R.id.button_next_0);
+        mNextBtn0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[0].nextStep();
+            }
+        });
+
+        Button mPrevBtn1 = findViewById(R.id.button_prev_1);
+        mPrevBtn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[1].prevStep();
+            }
+        });
+
+        Button mNextBtn1 = findViewById(R.id.button_next_1);
+        mNextBtn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[1].nextStep();
+            }
+        });
+
+        Button mPrevBtn2 = findViewById(R.id.button_prev_2);
+        mPrevBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[2].prevStep();
+            }
+        });
+
+        Button mNextBtn2 = findViewById(R.id.button_next_2);
+        mNextBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Finish!", Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -263,9 +309,9 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null && (error.networkResponse.statusCode == 404 || error.networkResponse.statusCode == 400)) {
-                            Snackbar.make(findViewById(R.id.main_container), "usuario y/o contraseña incorrecta", 800).show();
+                            Snackbar.make(findViewById(R.id.toolbar), "usuario y/o contraseña incorrecta", 800).show();
                         } else {
-                            Snackbar.make(findViewById(R.id.main_container), "Error al hacer la consulta", 800).show();
+                            Snackbar.make(findViewById(R.id.toolbar), "Error al hacer la consulta", 800).show();
                         }
                     }
                 });
@@ -315,9 +361,9 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null && (error.networkResponse.statusCode == 404 || error.networkResponse.statusCode == 400)) {
-                            Snackbar.make(findViewById(R.id.main_container), "usuario y/o contraseña incorrecta", 800).show();
+                            Snackbar.make(findViewById(R.id.toolbar), "usuario y/o contraseña incorrecta", 800).show();
                         } else {
-                            Snackbar.make(findViewById(R.id.main_container), "Error al hacer la consulta", 800).show();
+                            Snackbar.make(findViewById(R.id.toolbar), "Error al hacer la consulta", 800).show();
                         }
                     }
                 });
@@ -367,9 +413,9 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null && (error.networkResponse.statusCode == 404 || error.networkResponse.statusCode == 400)) {
-                            Snackbar.make(findViewById(R.id.main_container), "usuario y/o contraseña incorrecta", 800).show();
+                            Snackbar.make(findViewById(R.id.toolbar), "usuario y/o contraseña incorrecta", 800).show();
                         } else {
-                            Snackbar.make(findViewById(R.id.main_container), "Error al hacer la consulta", 800).show();
+                            Snackbar.make(findViewById(R.id.toolbar), "Error al hacer la consulta", 800).show();
                         }
                     }
                 });
@@ -379,14 +425,14 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     private void renderTypes() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, typesString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        final Spinner spinner = (Spinner) findViewById(R.id.type_spinner);
+        final Spinner spinner = findViewById(R.id.type_spinner);
         spinner.setAdapter(adapter);
     }
 
     private void renderPlaces() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, placesString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        final Spinner spinner = (Spinner) findViewById(R.id.place_spinner);
+        final Spinner spinner = findViewById(R.id.place_spinner);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());
     }
@@ -394,7 +440,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     private void renderClients() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clientsString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        final Spinner spinner = (Spinner) findViewById(R.id.client_spinner);
+        final Spinner spinner = findViewById(R.id.client_spinner);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());
     }
@@ -402,34 +448,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     private void addAttaches(List<String> paths) {
         attaches.clear();
         attaches.addAll(paths);
-
         attachAdapter.setAttaches(attaches);
-    }
-
-    private void renderAttach(final ViewGroup parent, final View attach, final String path) {
-        File image = new File(path);
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 5;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        ImageView img = (ImageView) attach.findViewById(R.id.attach_image);
-        img.setImageBitmap(bitmap);
-
-        TextView name = (TextView) attach.findViewById(R.id.attach_name);
-        name.setText(image.getName());
-
-        TextView size = (TextView) attach.findViewById(R.id.attach_size);
-        size.setText(humanReadableByteCount(image.length(), true));
-
-        View delete = attach.findViewById(R.id.attach_delete);
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parent.removeView(attach);
-                attaches.remove(path);
-            }
-        });
     }
 
     protected void createLocationRequest() {
@@ -509,11 +528,11 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void send() {
-        final EditText name = (EditText) findViewById(R.id.name_et);
-        final Spinner type = (Spinner) findViewById(R.id.type_spinner);
-        final Spinner place = (Spinner) findViewById(R.id.place_spinner);
-        final Spinner client = (Spinner) findViewById(R.id.client_spinner);
-        final EditText description = (EditText) findViewById(R.id.descriptio_et);
+        final EditText name = findViewById(R.id.name_et);
+        final Spinner type = findViewById(R.id.type_spinner);
+        final Spinner place = findViewById(R.id.place_spinner);
+        final Spinner client = findViewById(R.id.client_spinner);
+        final EditText description = findViewById(R.id.descriptio_et);
 
         String serviceUrl = getString(R.string.report_url);
         String url = getString(R.string.url, serviceUrl);
@@ -581,11 +600,11 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void sendWithFiles() throws FileNotFoundException {
-        EditText name = (EditText) findViewById(R.id.name_et);
-        Spinner type = (Spinner) findViewById(R.id.type_spinner);
-        Spinner place = (Spinner) findViewById(R.id.place_spinner);
-        Spinner client = (Spinner) findViewById(R.id.client_spinner);
-        EditText description = (EditText) findViewById(R.id.descriptio_et);
+        EditText name = findViewById(R.id.name_et);
+        Spinner type = findViewById(R.id.type_spinner);
+        Spinner place = findViewById(R.id.place_spinner);
+        Spinner client = findViewById(R.id.client_spinner);
+        EditText description = findViewById(R.id.descriptio_et);
 
         int type_id = 0;
         int client_id = 0;

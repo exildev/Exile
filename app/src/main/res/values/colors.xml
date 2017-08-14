@@ -6,4 +6,6 @@
 
     <color name="chatColor">#80cbc4</color>
     <color name="background">#eee</color>
+
+    <color name="material_deep_purple_500">#eee</color>
 </resources>
