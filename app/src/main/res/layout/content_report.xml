@@ -273,10 +273,11 @@
         </moe.feng.common.stepperview.VerticalStepperItemView>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:text="@string/required_fields" />
+            android:layout_marginTop="8dp"
+            android:text="@string/required_fields"
+            android:textColor="@color/material_red_500" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

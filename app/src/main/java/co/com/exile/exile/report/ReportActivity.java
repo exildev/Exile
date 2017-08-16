@@ -117,8 +117,6 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
     void setStepper() {
 
-        //TODO Que los steps 1 y 5 se les pueda dar click y devolverse a esa opcion
-
         mSteppers[0] = findViewById(R.id.stepper_0);
         mSteppers[1] = findViewById(R.id.stepper_1);
         mSteppers[2] = findViewById(R.id.stepper_2);
@@ -126,6 +124,78 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         mSteppers[4] = findViewById(R.id.stepper_4);
 
         VerticalStepperItemView.bindSteppers(mSteppers);
+
+        mSteppers[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[0].setState(VerticalStepperItemView.STATE_SELECTED);
+                mSteppers[1].setState(VerticalStepperItemView.STATE_NORMAL);
+                mSteppers[2].setState(VerticalStepperItemView.STATE_NORMAL);
+                mSteppers[3].setState(VerticalStepperItemView.STATE_NORMAL);
+                mSteppers[4].setState(VerticalStepperItemView.STATE_NORMAL);
+            }
+        });
+
+        mSteppers[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextInputEditText nombre = findViewById(R.id.name_et);
+                if (mSteppers[0].getState() == VerticalStepperItemView.STATE_SELECTED && nombre.getText().toString().equals("")) {
+                    return;
+                }
+                mSteppers[0].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[1].setState(VerticalStepperItemView.STATE_SELECTED);
+                mSteppers[2].setState(VerticalStepperItemView.STATE_NORMAL);
+                mSteppers[3].setState(VerticalStepperItemView.STATE_NORMAL);
+                mSteppers[4].setState(VerticalStepperItemView.STATE_NORMAL);
+            }
+        });
+
+        mSteppers[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextInputEditText nombre = findViewById(R.id.name_et);
+                if (mSteppers[0].getState() == VerticalStepperItemView.STATE_SELECTED && nombre.getText().toString().equals("")) {
+                    return;
+                }
+                mSteppers[0].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[1].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[2].setState(VerticalStepperItemView.STATE_SELECTED);
+                mSteppers[3].setState(VerticalStepperItemView.STATE_NORMAL);
+                mSteppers[4].setState(VerticalStepperItemView.STATE_NORMAL);
+            }
+        });
+
+
+        mSteppers[3].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextInputEditText nombre = findViewById(R.id.name_et);
+                if (mSteppers[0].getState() == VerticalStepperItemView.STATE_SELECTED && nombre.getText().toString().equals("")) {
+                    return;
+                }
+                mSteppers[0].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[1].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[2].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[3].setState(VerticalStepperItemView.STATE_SELECTED);
+                mSteppers[4].setState(VerticalStepperItemView.STATE_NORMAL);
+            }
+        });
+
+        mSteppers[4].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextInputEditText nombre = findViewById(R.id.name_et);
+                if (mSteppers[0].getState() == VerticalStepperItemView.STATE_SELECTED && nombre.getText().toString().equals("")) {
+                    return;
+                }
+                mSteppers[0].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[1].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[2].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[3].setState(VerticalStepperItemView.STATE_DONE);
+                mSteppers[4].setState(VerticalStepperItemView.STATE_SELECTED);
+            }
+        });
 
         Button mNextBtn0 = findViewById(R.id.button_next_0);
         mNextBtn0.setOnClickListener(new View.OnClickListener() {
