@@ -6,9 +6,4 @@
         android:icon="@drawable/ic_attachment_24dp"
         android:title="@string/attach_file"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/nav_send"
-        android:icon="@drawable/ic_send_24dp"
-        android:title="@string/send"
-        app:showAsAction="ifRoom" />
 </menu>

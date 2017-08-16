@@ -120,4 +120,7 @@
     <string name="activate_gps_message">Para que la aplicacion pueda enviar su ubicacion debe tener encendido el GPS ¿Desea encenderlo ahora?</string>
     <string name="report_attaches">Archivos</string>
     <string name="report_form_title">Registro reporte</string>
+    <string name="next">Siguiente</string>
+    <string name="back">Atras</string>
+    <string name="required_fields">* El campo es requerico</string>
 </resources>

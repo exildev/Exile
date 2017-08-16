@@ -12,10 +12,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -58,7 +59,6 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
@@ -76,21 +76,10 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     String[] clientsString;
     JSONArray mClients;
     ArrayList<String> attaches;
-    AttachAdapter attachAdapter;
-    private VerticalStepperItemView mSteppers[] = new VerticalStepperItemView[3];
-    private int mActivatedColorRes = R.color.material_blue_500;
-    private int mDoneIconRes = R.drawable.ic_done_white_16dp;
+    private VerticalStepperItemView mSteppers[] = new VerticalStepperItemView[5];
     private GoogleApiClient mGoogleClient;
     private LocationRequest mLocationRequest;
     private Location mLocation;
-
-    public static String humanReadableByteCount(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
-        if (bytes < unit) return bytes + " B";
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "KMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,21 +112,18 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                 .build();
         mGoogleClient.connect();
 
-        attachAdapter = new AttachAdapter();
-        //RecyclerView attachRV = findViewById(R.id.attaches_rv);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        //attachRV.setLayoutManager(layoutManager);
-        //attachRV.setHasFixedSize(true);
-        //attachRV.setAdapter(attachAdapter);
-
         setStepper();
     }
 
     void setStepper() {
+
+        //TODO Que los steps 1 y 5 se les pueda dar click y devolverse a esa opcion
+
         mSteppers[0] = findViewById(R.id.stepper_0);
         mSteppers[1] = findViewById(R.id.stepper_1);
         mSteppers[2] = findViewById(R.id.stepper_2);
+        mSteppers[3] = findViewById(R.id.stepper_3);
+        mSteppers[4] = findViewById(R.id.stepper_4);
 
         VerticalStepperItemView.bindSteppers(mSteppers);
 
@@ -145,7 +131,15 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         mNextBtn0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSteppers[0].nextStep();
+                TextInputEditText nombre = findViewById(R.id.name_et);
+                TextInputLayout layout = findViewById(R.id.name_il);
+                if (!nombre.getText().toString().equals("")) {
+                    mSteppers[0].nextStep();
+                    mSteppers[0].setSummary(nombre.getText().toString());
+                    layout.setError(null);
+                } else {
+                    layout.setError("Este campo es obligatorio");
+                }
             }
         });
 
@@ -161,6 +155,12 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         mNextBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Spinner spinner = findViewById(R.id.type_spinner);
+                if (spinner.getSelectedItemPosition() > 0) {
+                    mSteppers[1].setSummary(spinner.getSelectedItem().toString());
+                } else {
+                    mSteppers[1].setSummary(null);
+                }
                 mSteppers[1].nextStep();
             }
         });
@@ -177,7 +177,69 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         mNextBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Finish!", Snackbar.LENGTH_LONG).show();
+                Spinner spinner = findViewById(R.id.place_spinner);
+                if (spinner.getSelectedItemPosition() > 0) {
+                    mSteppers[2].setSummary(spinner.getSelectedItem().toString());
+                } else {
+                    mSteppers[2].setSummary(null);
+                }
+                mSteppers[2].nextStep();
+            }
+        });
+
+        Button mPrevBtn3 = findViewById(R.id.button_prev_3);
+        mPrevBtn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[3].prevStep();
+            }
+        });
+
+        Button mNextBtn3 = findViewById(R.id.button_next_3);
+        mNextBtn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Spinner spinner = findViewById(R.id.client_spinner);
+                if (spinner.getSelectedItemPosition() > 0) {
+                    mSteppers[3].setSummary(spinner.getSelectedItem().toString());
+                } else {
+                    mSteppers[3].setSummary(null);
+                }
+                mSteppers[3].nextStep();
+            }
+        });
+
+        Button mPrevBtn4 = findViewById(R.id.button_prev_4);
+        mPrevBtn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSteppers[4].prevStep();
+            }
+        });
+
+        Button mNextBtn4 = findViewById(R.id.button_next_4);
+        mNextBtn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextInputEditText desc = findViewById(R.id.description_et);
+                TextInputLayout layout = findViewById(R.id.description_il);
+                if (!desc.getText().toString().equals("")) {
+                    mSteppers[4].setSummary(desc.getText().toString());
+                    layout.setError(null);
+                    mSteppers[4].setState(VerticalStepperItemView.STATE_DONE);
+                    try {
+                        if (attaches.size() > 0) {
+                            sendWithFiles();
+                        } else {
+                            send();
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    layout.setError("Este campo es obligatorio");
+                }
+                mSteppers[4].nextStep();
             }
         });
     }
@@ -200,17 +262,6 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.nav_attach) {
             IPicker.open(this, attaches);
-            return true;
-        } else if (item.getItemId() == R.id.nav_send) {
-            try {
-                if (attaches.size() > 0) {
-                    sendWithFiles();
-                } else {
-                    send();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -425,7 +476,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
     private void renderTypes() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, typesString);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        final Spinner spinner = findViewById(R.id.type_spinner);
+        Spinner spinner = findViewById(R.id.type_spinner);
         spinner.setAdapter(adapter);
     }
 
@@ -434,7 +485,6 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         final Spinner spinner = findViewById(R.id.place_spinner);
         spinner.setAdapter(adapter);
-        spinner.setSelection(adapter.getCount());
     }
 
     private void renderClients() {
@@ -442,13 +492,11 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         final Spinner spinner = findViewById(R.id.client_spinner);
         spinner.setAdapter(adapter);
-        spinner.setSelection(adapter.getCount());
     }
 
     private void addAttaches(List<String> paths) {
         attaches.clear();
         attaches.addAll(paths);
-        attachAdapter.setAttaches(attaches);
     }
 
     protected void createLocationRequest() {
@@ -532,7 +580,11 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         final Spinner type = findViewById(R.id.type_spinner);
         final Spinner place = findViewById(R.id.place_spinner);
         final Spinner client = findViewById(R.id.client_spinner);
-        final EditText description = findViewById(R.id.descriptio_et);
+        final EditText description = findViewById(R.id.description_et);
+
+        Log.i("Location", mLocation + "");
+
+        stopLocationUpdates();
 
         String serviceUrl = getString(R.string.report_url);
         String url = getString(R.string.url, serviceUrl);
@@ -540,7 +592,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //hideLoading();
+                        hideLoading();
                         Log.i("reponse", response);
                         startLocationUpdates();
                         Snackbar.make(findViewById(R.id.name_et), "Reporte enviado con exito", 800).show();
@@ -561,9 +613,9 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                 int client_id = 0;
                 int place_id = 0;
                 try {
-                    type_id = mTypes.getJSONObject(type.getSelectedItemPosition()).getInt("id");
-                    client_id = mClients.getJSONObject(client.getSelectedItemPosition()).getInt("id");
-                    place_id = mPlaces.getJSONObject(place.getSelectedItemPosition()).getInt("id");
+                    type_id = mTypes.getJSONObject(type.getSelectedItemPosition() - 1).getInt("id");
+                    client_id = mClients.getJSONObject(client.getSelectedItemPosition() - 1).getInt("id");
+                    place_id = mPlaces.getJSONObject(place.getSelectedItemPosition() - 1).getInt("id");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -596,7 +648,15 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
             }
         };
         VolleySingleton.getInstance(this).addToRequestQueue(request);
-        //showLoading();
+        showLoading();
+    }
+
+    private void hideLoading() {
+        findViewById(R.id.loading).setVisibility(View.GONE);
+    }
+
+    private void showLoading() {
+        findViewById(R.id.loading).setVisibility(View.VISIBLE);
     }
 
     private void sendWithFiles() throws FileNotFoundException {
@@ -604,7 +664,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         Spinner type = findViewById(R.id.type_spinner);
         Spinner place = findViewById(R.id.place_spinner);
         Spinner client = findViewById(R.id.client_spinner);
-        EditText description = findViewById(R.id.descriptio_et);
+        EditText description = findViewById(R.id.description_et);
 
         int type_id = 0;
         int client_id = 0;
@@ -618,7 +678,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         }
 
         stopLocationUpdates();
-        //showLoading();
+        showLoading();
         UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
                 .setTitle("Subiendo reporte")
                 .setInProgressMessage("Subiendo reporte a [[UPLOAD_RATE]] ([[PROGRESS]])")
@@ -667,7 +727,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
                 @Override
                 public void onError(UploadInfo uploadInfo, Exception exception) {
-                    //hideLoading();
+                    hideLoading();
                     startLocationUpdates();
                     Snackbar.make(findViewById(R.id.name_et), "Hubo un error al subir el reporte", 800).show();
                     Log.e("sendWithFiles", exception.getMessage());
@@ -675,7 +735,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
                 @Override
                 public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
-                    //hideLoading();
+                    hideLoading();
                     Log.i("reponse", serverResponse.getBodyAsString());
                     startLocationUpdates();
                     Snackbar.make(findViewById(R.id.name_et), "Reporte enviado con exito", 800).show();
