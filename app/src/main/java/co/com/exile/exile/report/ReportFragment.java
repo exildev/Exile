@@ -84,7 +84,14 @@ public class ReportFragment extends Fragment {
     }
 
     private void loadData() {
-        String serviceUrl = getString(R.string.report_list_url);
+        String t;
+        if (type == TYPE_OPEN) {
+            t = getString(R.string.boolean_param_false);
+        } else {
+            t = getString(R.string.boolean_param_true);
+        }
+
+        String serviceUrl = getString(R.string.report_list_url, t);
 
         String url = getString(R.string.url, serviceUrl);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
