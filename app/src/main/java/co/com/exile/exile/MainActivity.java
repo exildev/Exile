@@ -24,6 +24,7 @@ import co.com.exile.exile.chat.ChatFragment;
 import co.com.exile.exile.profile.ProfileFragment;
 import co.com.exile.exile.report.ReportFragmetPagerAdapter;
 import co.com.exile.exile.task.TasksFragmetPagerAdapter;
+import shortbread.Shortcut;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -182,5 +183,10 @@ public class MainActivity extends AppCompatActivity {
             MenuItem item = menu.findItem(id);
             item.setVisible(true);
         }
+    }
+
+    @Shortcut(id = "show_reports", icon = R.drawable.ic_report_24dp, shortLabel = "Reportes", backStack = {LoginActivity.class})
+    public void showReports() {
+        showViewPager(R.id.navigation_report);
     }
 }
