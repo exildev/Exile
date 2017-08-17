@@ -1,7 +1,10 @@
 package co.com.exile.exile.report;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -116,4 +119,16 @@ public class ReportFragment extends Fragment {
         VolleySingleton.getInstance(this.getContext()).addToRequestQueue(request);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ReportFragmetPagerAdapter.ADD_NEW_REPORT && resultCode == Activity.RESULT_OK) {
+            mSwipe.setRefreshing(true);
+            loadData();
+            Snackbar.make(mSwipe, "Reporte guardado con exito", Snackbar.LENGTH_LONG).show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //TODO 1: Que la lista pueda ser paginable
+    //TODO 2: Al momento de registrar 
 }

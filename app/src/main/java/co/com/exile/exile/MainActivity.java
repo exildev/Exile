@@ -1,5 +1,6 @@
 package co.com.exile.exile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.AppBarLayout;
@@ -158,6 +159,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ReportFragmetPagerAdapter.ADD_NEW_REPORT) {
+            Fragment fragment = (Fragment) mReportPager.getAdapter().instantiateItem(mReportPager, mReportPager.getCurrentItem());
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void hideOption(int id) {

@@ -122,5 +122,5 @@
     <string name="report_form_title">Registro reporte</string>
     <string name="next">Siguiente</string>
     <string name="back">Atras</string>
-    <string name="required_fields">* El campo es requerico</string>
+    <string name="required_fields">* El campo es requerido</string>
 </resources>
