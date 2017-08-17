@@ -662,19 +662,25 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        hideLoading();
-                        Log.i("reponse", response);
-                        startLocationUpdates();
-                        Snackbar.make(findViewById(R.id.name_et), "Reporte enviado con exito", 800).show();
+                        Intent data = new Intent();
+                        data.putExtra("response", response);
+                        data.putExtra("status", 200);
+                        setResult(RESULT_OK, data);
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        startLocationUpdates();
-                        Snackbar.make(findViewById(R.id.name_et), "Hubo un error al subir el reporte", 800).show();
-                        String str = new String(error.networkResponse.data);
-                        Log.e("sendWithFiles", str);
+                        String err = new String(error.networkResponse.data);
+                        for (String r : err.split("\n")) {
+                            Log.e("solucion", r);
+                        }
+                        Intent data = new Intent();
+                        data.putExtra("response", err);
+                        data.putExtra("status", error.networkResponse.statusCode);
+                        setResult(RESULT_OK, data);
+                        finish();
                     }
                 }) {
             @Override
@@ -683,9 +689,12 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
                 int client_id = 0;
                 int place_id = 0;
                 try {
-                    type_id = mTypes.getJSONObject(type.getSelectedItemPosition() - 1).getInt("id");
-                    client_id = mClients.getJSONObject(client.getSelectedItemPosition() - 1).getInt("id");
-                    place_id = mPlaces.getJSONObject(place.getSelectedItemPosition() - 1).getInt("id");
+                    if (type.getSelectedItemPosition() > 0)
+                        type_id = mTypes.getJSONObject(type.getSelectedItemPosition() - 1).getInt("id");
+                    if (client.getSelectedItemPosition() > 0)
+                        client_id = mClients.getJSONObject(client.getSelectedItemPosition() - 1).getInt("id");
+                    if (place.getSelectedItemPosition() > 0)
+                        place_id = mPlaces.getJSONObject(place.getSelectedItemPosition() - 1).getInt("id");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -719,14 +728,6 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         };
         VolleySingleton.getInstance(this).addToRequestQueue(request);
         showLoading();
-    }
-
-    private void hideLoading() {
-        findViewById(R.id.loading).setVisibility(View.GONE);
-    }
-
-    private void showLoading() {
-        findViewById(R.id.loading).setVisibility(View.VISIBLE);
     }
 
     private void sendWithFiles() throws FileNotFoundException {
@@ -797,18 +798,20 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
                 @Override
                 public void onError(UploadInfo uploadInfo, Exception exception) {
-                    hideLoading();
-                    startLocationUpdates();
-                    Snackbar.make(findViewById(R.id.name_et), "Hubo un error al subir el reporte", 800).show();
-                    Log.e("sendWithFiles", exception.getMessage());
+                    Intent data = new Intent();
+                    data.putExtra("response", "");
+                    data.putExtra("status", 0);
+                    setResult(RESULT_OK, data);
+                    finish();
                 }
 
                 @Override
                 public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
-                    hideLoading();
-                    Log.i("reponse", serverResponse.getBodyAsString());
-                    startLocationUpdates();
-                    Snackbar.make(findViewById(R.id.name_et), "Reporte enviado con exito", 800).show();
+                    Intent data = new Intent();
+                    data.putExtra("response", new String(serverResponse.getBody()));
+                    data.putExtra("status", serverResponse.getHttpCode());
+                    setResult(RESULT_OK, data);
+                    finish();
                 }
 
                 @Override
@@ -819,6 +822,14 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void hideLoading() {
+        findViewById(R.id.loading).setVisibility(View.GONE);
+    }
+
+    private void showLoading() {
+        findViewById(R.id.loading).setVisibility(View.VISIBLE);
     }
 
     @Override
