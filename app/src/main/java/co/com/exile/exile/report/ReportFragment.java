@@ -128,7 +128,4 @@ public class ReportFragment extends Fragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    //TODO 1: Que la lista pueda ser paginable
-    //TODO 2: Al momento de registrar 
 }

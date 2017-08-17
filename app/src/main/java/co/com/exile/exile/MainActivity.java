@@ -120,18 +120,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        appBar = (AppBarLayout) findViewById(R.id.appbar);
-        mTaskPager = (ViewPager) findViewById(R.id.task_pager);
-        mReportPager = (ViewPager) findViewById(R.id.report_pager);
-        tabs = (TabLayout) findViewById(R.id.tabs);
+        appBar = findViewById(R.id.appbar);
+        mTaskPager = findViewById(R.id.task_pager);
+        mReportPager = findViewById(R.id.report_pager);
+        tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(mTaskPager);
 
-        fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
+        fragmentContainer = findViewById(R.id.fragment_container);
 
-        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabSelectListener);
 
         BottomBarTab nearby = bottomBar.getTabWithId(R.id.navigation_chat);
