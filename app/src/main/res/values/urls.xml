@@ -8,6 +8,7 @@
     <string name="report_clients_url">/operacion/cliente/list/</string>
     <string name="report_url">/novedades/reporte/form/</string>
     <string name="report_list_url">/novedades/reporte/list/?estado=%1$s</string>
+    <string name="task_url">/operacion/tarea/list/</string>
     <string name="boolean_param_true">True</string>
     <string name="boolean_param_false">False</string>
 </resources>

@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:showIn="@layout/fragment_today">
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/login_container"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -25,11 +24,11 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/task_name"
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:layout_marginLeft="72dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginStart="72dp"
                 android:layout_marginTop="12dp"
                 android:paddingBottom="8dp"
@@ -37,8 +36,35 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingStart="8dp"
-                android:text="My task"
                 android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/task_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="20dp"
+                android:textColor="#555"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/subtasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/subtask" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="16dp"
+                android:text="View completed task (3)"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -64,7 +90,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         android:elevation="8dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/login" />
@@ -72,7 +98,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         android:elevation="8dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/login" />
@@ -80,85 +106,12 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         android:elevation="8dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/login" />
                 </LinearLayout>
             </HorizontalScrollView>
-
-            <CheckBox
-                android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                android:drawableLeft="@android:color/transparent"
-                android:drawablePadding="8dp"
-                android:drawableStart="@android:color/transparent"
-                android:text="Nullam vulputate libero tortor dindinn"
-                android:textColor="#555"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <CheckBox
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:drawableLeft="@android:color/transparent"
-                android:drawablePadding="8dp"
-                android:drawableStart="@android:color/transparent"
-                android:text="Lorem ipsum dolor sit amet, elit tortor"
-                android:textColor="#555"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:padding="16dp"
-                android:text="View completed task (3)"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:background="#f6f7f7"
-                android:padding="8dp">
-
-                <EditText
-                    android:id="@+id/email_singup"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:gravity="center_vertical"
-                    android:hint="Add a reply"
-                    android:inputType="textEmailAddress"
-                    android:textColor="#555"
-                    android:textColorHint="#555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -175,7 +128,6 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/icon"
                     android:tint="#555"
@@ -186,7 +138,6 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/icon"
                     android:tint="#555"
@@ -198,7 +149,6 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/icon"
                     android:tint="#555"
@@ -231,7 +181,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="-36dp"
-        android:layout_marginLeft="36dp"
         android:layout_marginStart="36dp"
         app:cardBackgroundColor="@color/colorAccent"
         app:cardElevation="8dp">
