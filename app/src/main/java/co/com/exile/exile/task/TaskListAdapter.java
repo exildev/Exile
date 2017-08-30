@@ -17,6 +17,11 @@ import co.com.exile.exile.R;
 class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolder> {
 
     private JSONArray tasks;
+    private SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener;
+
+    TaskListAdapter(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener) {
+        this.mCheckedChangeListener = mCheckedChangeListener;
+    }
 
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,11 +39,10 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         try {
             JSONObject task = tasks.getJSONObject(position);
-            //String fecha = report.getString("fecha").split(" ")[0];
-            //String creatorR = report.getJSONObject("creatorR").getString("nombre");
+
             holder.title.setText(task.getString("nombre"));
             holder.description.setText(task.getString("descripcion"));
-            SubTaskListAdapter adapter = new SubTaskListAdapter();
+            SubTaskListAdapter adapter = new SubTaskListAdapter(mCheckedChangeListener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(holder.subTasks.getContext());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             holder.subTasks.setLayoutManager(layoutManager);

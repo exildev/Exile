@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,11 @@ import co.com.exile.exile.R;
 class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTaskViewHolder> {
 
     private JSONArray subTasks;
+    private onSubTaskCheckedChangeListener mCheckedChangeListener;
+
+    SubTaskListAdapter(onSubTaskCheckedChangeListener mCheckedChangeListener) {
+        this.mCheckedChangeListener = mCheckedChangeListener;
+    }
 
     @Override
     public SubTaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -35,6 +41,7 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
             JSONObject task = subTasks.getJSONObject(position);
 
             holder.view.setText(task.getString("nombre"));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -48,14 +55,29 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
         return subTasks.length();
     }
 
-    class SubTaskViewHolder extends RecyclerView.ViewHolder {
+    interface onSubTaskCheckedChangeListener {
+        void onCheckedChanged(JSONObject subTask, boolean b);
+    }
+
+    class SubTaskViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
 
         CheckBox view;
 
         SubTaskViewHolder(View itemView) {
             super(itemView);
-
             view = (CheckBox) itemView;
+            view.setOnCheckedChangeListener(this);
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            try {
+                JSONObject task = subTasks.getJSONObject(this.getAdapterPosition());
+                mCheckedChangeListener.onCheckedChanged(task, b);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

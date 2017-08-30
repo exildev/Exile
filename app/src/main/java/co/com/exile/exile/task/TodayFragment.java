@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +31,7 @@ import co.com.exile.exile.network.VolleySingleton;
  * Use the {@link TodayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayFragment extends Fragment {
+public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener {
 
     TaskListAdapter mAdapter;
     SwipeRefreshLayout mSwipe;
@@ -53,7 +55,7 @@ public class TodayFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         reportList.setLayoutManager(layoutManager);
         reportList.setHasFixedSize(true);
-        mAdapter = new TaskListAdapter();
+        mAdapter = new TaskListAdapter(this);
         reportList.setAdapter(mAdapter);
 
         mSwipe = view.findViewById(R.id.swipe);
@@ -97,5 +99,54 @@ public class TodayFragment extends Fragment {
         });
         VolleySingleton.getInstance(this.getContext()).addToRequestQueue(request);
     }
+
+    private void completeSubTask(final int id) {
+        String serviceUrl = getString(R.string.subtask_complete);
+
+        String url = getString(R.string.url, serviceUrl);
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //TODO refrescar la ui para mostrar la tarea completada
+                        Log.i("reponse", "bien");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //hideLoading();
+                        //TODO aqui mostrare el error que se mando mal el servicio
+                        Log.i("reponse", "mal");
+                    }
+                }) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject body = new JSONObject();
+                try {
+                    body.put("subtarea", id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return body.toString().getBytes();
+            }
+        };
+        VolleySingleton.getInstance(this.getContext()).addToRequestQueue(request);
+        //showLoading();
+    }
+
+    @Override
+    public void onCheckedChanged(JSONObject subTask, boolean b) {
+        try {
+            final int id = subTask.getInt("id");
+            if (b) {
+                completeSubTask(id);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
