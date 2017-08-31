@@ -2,6 +2,7 @@ package co.com.exile.exile.task;
 
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -108,16 +109,18 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //TODO refrescar la ui para mostrar la tarea completada
-                        Log.i("reponse", "bien");
+                        mSwipe.setRefreshing(false);
+                        Log.i("reponse", response + " tales");
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //hideLoading();
-                        //TODO aqui mostrare el error que se mando mal el servicio
-                        Log.i("reponse", "mal");
+                        mSwipe.setRefreshing(false);
+                        View view = getView();
+                        if (view != null) {
+                            Snackbar.make(view, "Hubo un error al enviar la solicitud", Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 }) {
             @Override
@@ -132,15 +135,54 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
             }
         };
         VolleySingleton.getInstance(this.getContext()).addToRequestQueue(request);
-        //showLoading();
+        mSwipe.setRefreshing(true);
+    }
+
+    private void uncompleteSubTask(final int id) {
+        String serviceUrl = getString(R.string.subtask_uncomplete, id);
+
+        String url = getString(R.string.url, serviceUrl);
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mSwipe.setRefreshing(false);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mSwipe.setRefreshing(false);
+                        View view = getView();
+                        if (view != null) {
+                            Snackbar.make(view, "Hubo un error al enviar la solicitud", Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                }) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject body = new JSONObject();
+                try {
+                    body.put("subtarea", id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return body.toString().getBytes();
+            }
+        };
+        VolleySingleton.getInstance(this.getContext()).addToRequestQueue(request);
+        mSwipe.setRefreshing(true);
     }
 
     @Override
     public void onCheckedChanged(JSONObject subTask, boolean b) {
         try {
-            final int id = subTask.getInt("id");
             if (b) {
+                final int id = subTask.getInt("id");
                 completeSubTask(id);
+            } else {
+                final int completado = subTask.getInt("completado");
+                uncompleteSubTask(completado);
             }
         } catch (JSONException e) {
             e.printStackTrace();

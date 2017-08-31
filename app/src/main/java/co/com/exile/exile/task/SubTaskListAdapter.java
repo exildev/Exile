@@ -76,7 +76,10 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             try {
                 JSONObject task = subTasks.getJSONObject(this.getAdapterPosition());
-                mCheckedChangeListener.onCheckedChanged(task, b);
+                Object completado = task.get("completado");
+                if ((b && completado.equals(JSONObject.NULL)) || (!b && !completado.equals(JSONObject.NULL))) {
+                    mCheckedChangeListener.onCheckedChanged(task, b);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

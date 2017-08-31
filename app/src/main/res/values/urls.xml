@@ -10,6 +10,7 @@
     <string name="report_list_url">/novedades/reporte/list/?estado=%1$s</string>
     <string name="task_url">/operacion/tarea/list/</string>
     <string name="subtask_complete">/operacion/sub/completado/form/</string>
+    <string name="subtask_uncomplete">/operacion/sub/completado/delete/%1$d/</string>
     <string name="boolean_param_true">True</string>
     <string name="boolean_param_false">False</string>
 </resources>
