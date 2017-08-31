@@ -39,8 +39,11 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
     public void onBindViewHolder(SubTaskViewHolder holder, int position) {
         try {
             JSONObject task = subTasks.getJSONObject(position);
-
+            Object completado = task.get("completado");
             holder.view.setText(task.getString("nombre"));
+            if (!completado.equals(JSONObject.NULL)) {
+                holder.view.setChecked(true);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
