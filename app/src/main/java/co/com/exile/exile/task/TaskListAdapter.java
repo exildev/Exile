@@ -3,6 +3,7 @@ package co.com.exile.exile.task;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,20 +37,37 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     }
 
     @Override
-    public void onBindViewHolder(TaskViewHolder holder, int position) {
+    public void onBindViewHolder(final TaskViewHolder holder, int position) {
         try {
             JSONObject task = tasks.getJSONObject(position);
 
             holder.title.setText(task.getString("nombre"));
             holder.description.setText(task.getString("descripcion"));
-            SubTaskListAdapter adapter = new SubTaskListAdapter(mCheckedChangeListener);
+            final SubTaskListAdapter adapter = new SubTaskListAdapter(mCheckedChangeListener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(holder.subTasks.getContext());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             holder.subTasks.setLayoutManager(layoutManager);
             holder.subTasks.setHasFixedSize(true);
             holder.subTasks.setAdapter(adapter);
             adapter.setSubTasks(task.getJSONArray("subtareas"));
-            //holder.index.setText("#" + report.getInt("id") + "");
+
+            String text = holder.viewCompleted.getContext().getString(R.string.show_completed_subtasks, adapter.countCompleted());
+            holder.viewCompleted.setText(text);
+
+            holder.viewCompleted.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("view completed", view.toString());
+                    if (adapter.isShowCompleted()) {
+                        String text = view.getContext().getString(R.string.show_completed_subtasks, adapter.countCompleted());
+                        holder.viewCompleted.setText(text);
+                    } else {
+                        String text = view.getContext().getString(R.string.hide_completed_subtasks);
+                        holder.viewCompleted.setText(text);
+                    }
+                    adapter.setShowCompleted(!adapter.isShowCompleted());
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -68,6 +86,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         TextView title;
         TextView description;
         RecyclerView subTasks;
+        TextView viewCompleted;
         View hasFiles;
 
         TaskViewHolder(View itemView) {
@@ -76,6 +95,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             title = itemView.findViewById(R.id.task_name);
             description = itemView.findViewById(R.id.task_description);
             subTasks = itemView.findViewById(R.id.subtasks);
+            viewCompleted = itemView.findViewById(R.id.view_completed);
         }
     }
 }

@@ -55,13 +55,13 @@
                 tools:listitem="@layout/subtask" />
 
             <TextView
+                android:id="@+id/view_completed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:padding="16dp"
-                android:text="View completed task (3)"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
