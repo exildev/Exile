@@ -101,16 +101,26 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         VolleySingleton.getInstance(this.getContext()).addToRequestQueue(request);
     }
 
-    private void completeSubTask(final int id) {
+    private void completeSubTask(final JSONObject subTask) throws JSONException {
+
+        final int id = subTask.getInt("id");
+
         String serviceUrl = getString(R.string.subtask_complete);
 
         String url = getString(R.string.url, serviceUrl);
-        StringRequest request = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
                         mSwipe.setRefreshing(false);
-                        Log.i("reponse", response + " tales");
+                        try {
+                            Log.i("reponse", response.getInt("id") + " " + response.getInt("subtarea_id"));
+                            subTask.put("completado", response.getInt("id"));
+                            mAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -124,7 +134,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     }
                 }) {
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 JSONObject body = new JSONObject();
                 try {
                     body.put("subtarea", id);
@@ -138,7 +148,9 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         mSwipe.setRefreshing(true);
     }
 
-    private void uncompleteSubTask(final int id) {
+    private void uncompleteSubTask(final JSONObject subTask) throws JSONException {
+        final int id = subTask.getInt("completado");
+
         String serviceUrl = getString(R.string.subtask_uncomplete, id);
 
         String url = getString(R.string.url, serviceUrl);
@@ -147,6 +159,12 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     @Override
                     public void onResponse(String response) {
                         mSwipe.setRefreshing(false);
+                        try {
+                            subTask.put("completado", JSONObject.NULL);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        mAdapter.notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener() {
@@ -178,11 +196,9 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
     public void onCheckedChanged(JSONObject subTask, boolean b) {
         try {
             if (b) {
-                final int id = subTask.getInt("id");
-                completeSubTask(id);
+                completeSubTask(subTask);
             } else {
-                final int completado = subTask.getInt("completado");
-                uncompleteSubTask(completado);
+                uncompleteSubTask(subTask);
             }
         } catch (JSONException e) {
             e.printStackTrace();
