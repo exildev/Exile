@@ -5,8 +5,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -19,9 +21,11 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
 
     private JSONArray tasks;
     private SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener;
+    private OnRecordVoice mOnRecordVoice;
 
-    TaskListAdapter(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener) {
+    TaskListAdapter(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener, OnRecordVoice onRecordVoice) {
         this.mCheckedChangeListener = mCheckedChangeListener;
+        this.mOnRecordVoice = onRecordVoice;
     }
 
     @Override
@@ -81,13 +85,19 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         return tasks.length();
     }
 
+    interface OnRecordVoice {
+        void tryStartRecord();
+
+        void tryStopRecord(JSONObject task);
+    }
+
     class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
         TextView description;
         RecyclerView subTasks;
         TextView viewCompleted;
-        View hasFiles;
+        ImageButton voiceBtn;
 
         TaskViewHolder(View itemView) {
             super(itemView);
@@ -96,6 +106,35 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             description = itemView.findViewById(R.id.task_description);
             subTasks = itemView.findViewById(R.id.subtasks);
             viewCompleted = itemView.findViewById(R.id.view_completed);
+            voiceBtn = itemView.findViewById(R.id.voice_btn);
+
+            voiceBtn.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mOnRecordVoice.tryStartRecord();
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            try {
+                                mOnRecordVoice.tryStopRecord(tasks.getJSONObject(getAdapterPosition()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case MotionEvent.ACTION_CANCEL:
+                            try {
+                                mOnRecordVoice.tryStopRecord(tasks.getJSONObject(getAdapterPosition()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });
         }
     }
 }
