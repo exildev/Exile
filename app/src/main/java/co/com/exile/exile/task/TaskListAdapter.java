@@ -45,6 +45,8 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         try {
             JSONObject task = tasks.getJSONObject(position);
 
+            Log.i("multimedia", task.getJSONArray("multimedia") + "");
+
             holder.title.setText(task.getString("nombre"));
             holder.description.setText(task.getString("descripcion"));
             final SubTaskListAdapter adapter = new SubTaskListAdapter(mCheckedChangeListener);
@@ -54,6 +56,14 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.subTasks.setHasFixedSize(true);
             holder.subTasks.setAdapter(adapter);
             adapter.setSubTasks(task.getJSONArray("subtareas"));
+
+            final SubTaskListAdapter adapter2 = new SubTaskListAdapter(mCheckedChangeListener);
+            LinearLayoutManager layoutManager2 = new LinearLayoutManager(holder.multimedia.getContext());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            holder.multimedia.setLayoutManager(layoutManager2);
+            holder.multimedia.setHasFixedSize(true);
+            holder.multimedia.setAdapter(adapter2);
+            adapter2.setSubTasks(task.getJSONArray("multimedia"));
 
             String text = holder.viewCompleted.getContext().getString(R.string.show_completed_subtasks, adapter.countCompleted());
             holder.viewCompleted.setText(text);
@@ -98,6 +108,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         RecyclerView subTasks;
         TextView viewCompleted;
         ImageButton voiceBtn;
+        RecyclerView multimedia;
 
         TaskViewHolder(View itemView) {
             super(itemView);
@@ -107,6 +118,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             subTasks = itemView.findViewById(R.id.subtasks);
             viewCompleted = itemView.findViewById(R.id.view_completed);
             voiceBtn = itemView.findViewById(R.id.voice_btn);
+            multimedia = itemView.findViewById(R.id.multimedia);
 
             voiceBtn.setOnTouchListener(new View.OnTouchListener() {
                 @Override

@@ -66,7 +66,8 @@
                 android:textStyle="bold" />
 
 
-            <HorizontalScrollView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/multimedia"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:clipToPadding="false"
@@ -74,44 +75,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingStart="8dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp">
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:elevation="8dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/login" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginStart="8dp"
-                        android:elevation="8dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/login" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginStart="8dp"
-                        android:elevation="8dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/login" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginStart="8dp"
-                        android:elevation="8dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/login" />
-                </LinearLayout>
-            </HorizontalScrollView>
+                android:scrollbars="none" />
 
             <LinearLayout
                 android:layout_width="match_parent"

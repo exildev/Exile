@@ -243,8 +243,8 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
     }
 
     private void uploadAudioVoice(JSONObject task) throws FileNotFoundException, MalformedURLException, JSONException {
-        String serviceUrl = getString(R.string.multimedia_add);
 
+        String serviceUrl = getString(R.string.multimedia_add);
         String url = getString(R.string.url, serviceUrl);
         UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
                 .setTitle("Subiendo archivo")
@@ -279,7 +279,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                         View view = getView();
                         assert view != null;
                         Snackbar.make(view, "Archivo enviado con exito", 800).show();
-                        Log.e("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
+                        Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
                     }
 
                     @Override
@@ -302,7 +302,6 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         }
 
     }
-
 
     private void startPlaying() {
         mPlayer = new MediaPlayer();
