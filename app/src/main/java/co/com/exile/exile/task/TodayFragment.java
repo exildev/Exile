@@ -3,7 +3,6 @@ package co.com.exile.exile.task;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -52,7 +51,7 @@ import co.com.exile.exile.network.VolleySingleton;
  * Use the {@link TodayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice {
+public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener {
 
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -83,7 +82,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         reportList.setLayoutManager(layoutManager);
         reportList.setHasFixedSize(true);
-        mAdapter = new TaskListAdapter(this, this);
+        mAdapter = new TaskListAdapter(this, this, this);
         reportList.setAdapter(mAdapter);
 
         mSwipe = view.findViewById(R.id.swipe);
@@ -108,6 +107,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         assert dir != null;
         mFileName = dir.getAbsolutePath();
         mFileName += "/audiorecord.3gp";
+        mPlayer = new MediaPlayer();
     }
 
     @Override
@@ -258,7 +258,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 .setNotificationConfig(notificationConfig)
                 .setMaxRetries(1)
                 .addParameter("tarea", task.getInt("id") + "")
-                .addParameter("audio", "true")
+                .addParameter("tipo", getString(R.string.param_multimedia_audio))
                 .setDelegate(new UploadStatusDelegate() {
                     @Override
                     public void onProgress(UploadInfo uploadInfo) {
@@ -303,10 +303,13 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
     }
 
-    private void startPlaying() {
-        mPlayer = new MediaPlayer();
+    private void startPlaying(String url) {
+        if (mPlayer != null) {
+            stopPlaying();
+        }
         try {
-            mPlayer.setDataSource(mFileName);
+            mPlayer = new MediaPlayer();
+            mPlayer.setDataSource(url);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -322,15 +325,8 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         }
     }
 
-    private void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-        } else {
-            stopPlaying();
-        }
-    }
-
     private void stopPlaying() {
+        mPlayer.stop();
         mPlayer.release();
         mPlayer = null;
     }
@@ -370,7 +366,8 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
     private void playSound() {
         MediaPlayer player = MediaPlayer.create(this.getContext(), R.raw.audio_record_ready);
         //TODO cambiar el metodo deprecated por el nuevo en api 26
-        player.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+        //player.prepare();
+        //player.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
         player.start();
         View view = getView();
         assert view != null;
@@ -397,5 +394,26 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
     @Override
     public void tryStopRecord(JSONObject task) {
         onRecord(false, task);
+    }
+
+    @Override
+    public void onClick(JSONObject multimedia, int index) {
+        try {
+            switch (multimedia.getInt("tipo")) {
+                case 2:
+                    String serviceUrl = multimedia.getString("url");
+                    String url = getString(R.string.url, serviceUrl);
+                    startPlaying(url);
+                    Log.i("play", url);
+                    break;
+                case 1:
+                    Log.i("show", multimedia.toString());
+                    break;
+                default:
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -3,7 +3,6 @@ package co.com.exile.exile.task;
 
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
     void setSubTasks(JSONArray subTasks) {
         this.subTasks = subTasks;
         notifyDataSetChanged();
-        Log.i("subtasks", subTasks.toString());
     }
 
     boolean isShowCompleted() {
@@ -56,7 +54,7 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
             return 0;
         }
         for (int i = 0; i < subTasks.length(); i++) {
-            JSONObject task = null;
+            JSONObject task;
             try {
                 task = subTasks.getJSONObject(i);
                 Object completado = task.get("completado");
@@ -115,7 +113,7 @@ class SubTaskListAdapter extends RecyclerView.Adapter<SubTaskListAdapter.SubTask
             view.setOnCheckedChangeListener(this);
         }
 
-        public void setVisibility(boolean isVisible) {
+        void setVisibility(boolean isVisible) {
             RecyclerView.LayoutParams param = (RecyclerView.LayoutParams) itemView.getLayoutParams();
             if (isVisible) {
                 param.height = LinearLayout.LayoutParams.WRAP_CONTENT;

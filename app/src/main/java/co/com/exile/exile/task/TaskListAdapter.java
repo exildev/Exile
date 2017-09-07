@@ -21,11 +21,13 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
 
     private JSONArray tasks;
     private SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener;
+    private MultimediaListAdapter.onMultimediaClickListener multimediaClickListener;
     private OnRecordVoice mOnRecordVoice;
 
-    TaskListAdapter(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener, OnRecordVoice onRecordVoice) {
+    TaskListAdapter(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener, OnRecordVoice onRecordVoice, MultimediaListAdapter.onMultimediaClickListener multimediaClickListener) {
         this.mCheckedChangeListener = mCheckedChangeListener;
         this.mOnRecordVoice = onRecordVoice;
+        this.multimediaClickListener = multimediaClickListener;
     }
 
     @Override
@@ -57,13 +59,13 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.subTasks.setAdapter(adapter);
             adapter.setSubTasks(task.getJSONArray("subtareas"));
 
-            final SubTaskListAdapter adapter2 = new SubTaskListAdapter(mCheckedChangeListener);
+            final MultimediaListAdapter adapter2 = new MultimediaListAdapter(multimediaClickListener);
             LinearLayoutManager layoutManager2 = new LinearLayoutManager(holder.multimedia.getContext());
-            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
             holder.multimedia.setLayoutManager(layoutManager2);
             holder.multimedia.setHasFixedSize(true);
             holder.multimedia.setAdapter(adapter2);
-            adapter2.setSubTasks(task.getJSONArray("multimedia"));
+            adapter2.setMultimedia(task.getJSONArray("multimedia"));
 
             String text = holder.viewCompleted.getContext().getString(R.string.show_completed_subtasks, adapter.countCompleted());
             holder.viewCompleted.setText(text);

@@ -15,4 +15,7 @@
 
     <string name="boolean_param_true">True</string>
     <string name="boolean_param_false">False</string>
+
+    <string name="param_multimedia_audio">2</string>
+    <string name="param_multimedia_photo">1</string>
 </resources>

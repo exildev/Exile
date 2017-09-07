@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import org.json.JSONArray;
@@ -16,6 +17,11 @@ import co.com.exile.exile.R;
 class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.MultimediaViewHolder> {
 
     private JSONArray multimedia;
+    private onMultimediaClickListener multimediaClickListener;
+
+    MultimediaListAdapter(onMultimediaClickListener multimediaClickListener) {
+        this.multimediaClickListener = multimediaClickListener;
+    }
 
     @Override
     public MultimediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -24,7 +30,7 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
         return new MultimediaViewHolder(view);
     }
 
-    public void setMultimedia(JSONArray multimedia) {
+    void setMultimedia(JSONArray multimedia) {
         this.multimedia = multimedia;
         notifyDataSetChanged();
     }
@@ -32,7 +38,7 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
     @Override
     public void onBindViewHolder(MultimediaViewHolder holder, int position) {
         try {
-            JSONObject task = multimedia.getJSONObject(position);
+            JSONObject file = multimedia.getJSONObject(position);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -46,13 +52,30 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
         return multimedia.length();
     }
 
-    class MultimediaViewHolder extends RecyclerView.ViewHolder {
+    interface onMultimediaClickListener {
+        void onClick(JSONObject multimedia, int index);
+    }
+
+    class MultimediaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView img;
+        ImageButton playBtn;
 
         MultimediaViewHolder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.multimedia_img);
+            playBtn = itemView.findViewById(R.id.play_btn);
+            itemView.setOnClickListener(this);
+            playBtn.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            try {
+                multimediaClickListener.onClick(multimedia.getJSONObject(getAdapterPosition()), getAdapterPosition());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
