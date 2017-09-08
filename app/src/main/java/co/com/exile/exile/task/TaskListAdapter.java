@@ -24,10 +24,19 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     private MultimediaListAdapter.onMultimediaClickListener multimediaClickListener;
     private OnRecordVoice mOnRecordVoice;
 
-    TaskListAdapter(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener, OnRecordVoice onRecordVoice, MultimediaListAdapter.onMultimediaClickListener multimediaClickListener) {
+    TaskListAdapter setmCheckedChangeListener(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener) {
         this.mCheckedChangeListener = mCheckedChangeListener;
-        this.mOnRecordVoice = onRecordVoice;
+        return this;
+    }
+
+    TaskListAdapter setmOnRecordVoice(OnRecordVoice mOnRecordVoice) {
+        this.mOnRecordVoice = mOnRecordVoice;
+        return this;
+    }
+
+    TaskListAdapter setMultimediaClickListener(MultimediaListAdapter.onMultimediaClickListener multimediaClickListener) {
         this.multimediaClickListener = multimediaClickListener;
+        return this;
     }
 
     @Override

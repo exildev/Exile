@@ -39,6 +39,11 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
     public void onBindViewHolder(MultimediaViewHolder holder, int position) {
         try {
             JSONObject file = multimedia.getJSONObject(position);
+            if (file.has("isPlaying")) {
+                holder.playBtn.setImageResource(R.drawable.ic_pause_circle_outline_24dp);
+            } else {
+                holder.playBtn.setImageResource(R.drawable.ic_play_circle_outline_24dp);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -53,7 +58,7 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
     }
 
     interface onMultimediaClickListener {
-        void onClick(JSONObject multimedia, int index);
+        void onClick(JSONObject multimedia, MultimediaListAdapter adapter);
     }
 
     class MultimediaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -72,7 +77,7 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
         @Override
         public void onClick(View view) {
             try {
-                multimediaClickListener.onClick(multimedia.getJSONObject(getAdapterPosition()), getAdapterPosition());
+                multimediaClickListener.onClick(multimedia.getJSONObject(getAdapterPosition()), MultimediaListAdapter.this);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

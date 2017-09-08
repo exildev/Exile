@@ -82,7 +82,10 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         reportList.setLayoutManager(layoutManager);
         reportList.setHasFixedSize(true);
-        mAdapter = new TaskListAdapter(this, this, this);
+        mAdapter = new TaskListAdapter()
+                .setmCheckedChangeListener(this)
+                .setmOnRecordVoice(this)
+                .setMultimediaClickListener(this);
         reportList.setAdapter(mAdapter);
 
         mSwipe = view.findViewById(R.id.swipe);
@@ -106,7 +109,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         File dir = getActivity().getExternalCacheDir();
         assert dir != null;
         mFileName = dir.getAbsolutePath();
-        mFileName += "/audiorecord.3gp";
+        mFileName += "/audiorecord.aac";
         mPlayer = new MediaPlayer();
     }
 
@@ -287,6 +290,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     }
                 })
                 .startUpload();
+        //TODO agregar a la lista de multimedia los archivos que se esten subiendo y si indicardor
     }
 
     @Override
@@ -303,13 +307,38 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
     }
 
-    private void startPlaying(String url) {
+    private void startPlaying(final JSONObject multimedia, final RecyclerView.Adapter adapter) throws JSONException {
+        if (mPlayer != null) {
+            stopPlaying();
+        }
+        try {
+            String serviceUrl = multimedia.getString("url");
+            String url = getString(R.string.url, serviceUrl);
+
+            mPlayer = new MediaPlayer();
+            mPlayer.setDataSource(url);
+            mPlayer.prepare();
+            mPlayer.start();
+            mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    multimedia.remove("isPlaying");
+                    Log.i("multimedia", multimedia.toString());
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void startPlaying() {
         if (mPlayer != null) {
             stopPlaying();
         }
         try {
             mPlayer = new MediaPlayer();
-            mPlayer.setDataSource(url);
+            mPlayer.setDataSource(mFileName);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -335,9 +364,9 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         playSound();
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
         mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
             mRecorder.prepare();
@@ -354,6 +383,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 mRecorder.stop();
                 mRecorder.release();
                 mRecorder = null;
+                startPlaying();
                 uploadAudioVoice(task);
             }
         } catch (RuntimeException ex) {
@@ -397,14 +427,13 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
     }
 
     @Override
-    public void onClick(JSONObject multimedia, int index) {
+    public void onClick(JSONObject multimedia, MultimediaListAdapter adapter) {
         try {
             switch (multimedia.getInt("tipo")) {
                 case 2:
-                    String serviceUrl = multimedia.getString("url");
-                    String url = getString(R.string.url, serviceUrl);
-                    startPlaying(url);
-                    Log.i("play", url);
+                    startPlaying(multimedia, adapter);
+                    multimedia.put("isPlaying", true);
+                    adapter.notifyDataSetChanged();
                     break;
                 case 1:
                     Log.i("show", multimedia.toString());
