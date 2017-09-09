@@ -56,8 +56,6 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         try {
             JSONObject task = tasks.getJSONObject(position);
 
-            Log.i("multimedia", task.getJSONArray("multimedia") + "");
-
             holder.title.setText(task.getString("nombre"));
             holder.description.setText(task.getString("descripcion"));
             final SubTaskListAdapter adapter = new SubTaskListAdapter(mCheckedChangeListener);
@@ -68,13 +66,22 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.subTasks.setAdapter(adapter);
             adapter.setSubTasks(task.getJSONArray("subtareas"));
 
-            final MultimediaListAdapter adapter2 = new MultimediaListAdapter(multimediaClickListener);
-            LinearLayoutManager layoutManager2 = new LinearLayoutManager(holder.multimedia.getContext());
-            layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-            holder.multimedia.setLayoutManager(layoutManager2);
+            final MultimediaListAdapter multimediaListAdapter = new MultimediaListAdapter(multimediaClickListener);
+            LinearLayoutManager multimediaLayoutManager = new LinearLayoutManager(holder.multimedia.getContext());
+            multimediaLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            multimediaLayoutManager.setStackFromEnd(true);
+            holder.multimedia.setLayoutManager(multimediaLayoutManager);
             holder.multimedia.setHasFixedSize(true);
-            holder.multimedia.setAdapter(adapter2);
-            adapter2.setMultimedia(task.getJSONArray("multimedia"));
+            holder.multimedia.setAdapter(multimediaListAdapter);
+            holder.multimediaAdapter = multimediaListAdapter;
+            multimediaListAdapter.setMultimedia(task.getJSONArray("multimedia"));
+            multimediaListAdapter.setMultimediaUpdate(new MultimediaListAdapter.onMultimediaUpdate() {
+                @Override
+                public void onUpdate() {
+                    holder.multimedia.smoothScrollToPosition(multimediaListAdapter.getItemCount() - 1);
+                }
+            });
+
 
             String text = holder.viewCompleted.getContext().getString(R.string.show_completed_subtasks, adapter.countCompleted());
             holder.viewCompleted.setText(text);
@@ -109,7 +116,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     interface OnRecordVoice {
         void tryStartRecord();
 
-        void tryStopRecord(JSONObject task);
+        void tryStopRecord(JSONObject task, MultimediaListAdapter adapter);
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -120,6 +127,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         TextView viewCompleted;
         ImageButton voiceBtn;
         RecyclerView multimedia;
+        MultimediaListAdapter multimediaAdapter;
 
         TaskViewHolder(View itemView) {
             super(itemView);
@@ -140,14 +148,14 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
                             break;
                         case MotionEvent.ACTION_UP:
                             try {
-                                mOnRecordVoice.tryStopRecord(tasks.getJSONObject(getAdapterPosition()));
+                                mOnRecordVoice.tryStopRecord(tasks.getJSONObject(getAdapterPosition()), multimediaAdapter);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                             break;
                         case MotionEvent.ACTION_CANCEL:
                             try {
-                                mOnRecordVoice.tryStopRecord(tasks.getJSONObject(getAdapterPosition()));
+                                mOnRecordVoice.tryStopRecord(tasks.getJSONObject(getAdapterPosition()), multimediaAdapter);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

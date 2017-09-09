@@ -245,7 +245,17 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         mSwipe.setRefreshing(true);
     }
 
-    private void uploadAudioVoice(JSONObject task) throws FileNotFoundException, MalformedURLException, JSONException {
+    private void uploadAudioVoice(final JSONObject task, final MultimediaListAdapter adapter) throws FileNotFoundException, MalformedURLException, JSONException {
+
+        final JSONObject file = new JSONObject();
+        file.put("url", mFileName);
+        file.put("tipo", 2);
+        file.put("isLoading", true);
+
+        final JSONArray multimedia = task.getJSONArray("multimedia");
+        multimedia.put(file);
+        adapter.notifyMultimediaChanged();
+
 
         String serviceUrl = getString(R.string.multimedia_add);
         String url = getString(R.string.url, serviceUrl);
@@ -278,19 +288,52 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
                     @Override
                     public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
-                        //hideLoading();
-                        View view = getView();
-                        assert view != null;
-                        Snackbar.make(view, "Archivo enviado con exito", 800).show();
-                        Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
+                        if (serverResponse.getHttpCode() == 200 || serverResponse.getHttpCode() == 201) {
+                            View view = getView();
+                            assert view != null;
+                            Snackbar.make(view, "Archivo enviado con exito", 800).show();
+
+                            Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
+
+                            file.remove("isLoading");
+                            adapter.notifyMultimediaChanged();
+                        } else {
+                            JSONArray newMultimedia = new JSONArray();
+                            try {
+                                for (int i = 0; i < multimedia.length(); i++) {
+                                    if (multimedia.getJSONObject(i) != file) {
+                                        newMultimedia.put(multimedia.getJSONObject(i));
+                                    }
+                                }
+                                task.put("multimedia", newMultimedia);
+                                adapter.setMultimedia(newMultimedia);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            View view = getView();
+                            assert view != null;
+                            Snackbar.make(view, "Hubo un error al subir el archivo", 800).show();
+                        }
                     }
 
                     @Override
                     public void onCancelled(UploadInfo uploadInfo) {
+                        JSONArray newMultimedia = new JSONArray();
+                        try {
+                            for (int i = 0; i < multimedia.length(); i++) {
+                                if (multimedia.getJSONObject(i) != file) {
+                                    newMultimedia.put(multimedia.getJSONObject(i));
+                                }
+                            }
+                            task.put("multimedia", newMultimedia);
+                            adapter.setMultimedia(newMultimedia);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 })
                 .startUpload();
-        //TODO agregar a la lista de multimedia los archivos que se esten subiendo y si indicardor
     }
 
     @Override
@@ -312,8 +355,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
             stopPlaying();
         }
         try {
-            String serviceUrl = multimedia.getString("url");
-            String url = getString(R.string.url, serviceUrl);
+            String url = multimedia.getString("url");
 
             mPlayer = new MediaPlayer();
             mPlayer.setDataSource(url);
@@ -346,11 +388,11 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         }
     }
 
-    private void onRecord(boolean start, JSONObject task) {
+    private void onRecord(boolean start, JSONObject task, MultimediaListAdapter adapter) {
         if (start) {
             checkBeforeStart();
         } else {
-            stopRecording(task);
+            stopRecording(task, adapter);
         }
     }
 
@@ -377,14 +419,13 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         mRecorder.start();
     }
 
-    private void stopRecording(JSONObject task) {
+    private void stopRecording(JSONObject task, MultimediaListAdapter adapter) {
         try {
             if (mRecorder != null) {
                 mRecorder.stop();
                 mRecorder.release();
                 mRecorder = null;
-                startPlaying();
-                uploadAudioVoice(task);
+                uploadAudioVoice(task, adapter);
             }
         } catch (RuntimeException ex) {
             Log.e(LOG_TAG, "stop failed");
@@ -418,12 +459,12 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
     @Override
     public void tryStartRecord() {
-        onRecord(true, null);
+        onRecord(true, null, null);
     }
 
     @Override
-    public void tryStopRecord(JSONObject task) {
-        onRecord(false, task);
+    public void tryStopRecord(JSONObject task, MultimediaListAdapter adapter) {
+        onRecord(false, task, adapter);
     }
 
     @Override

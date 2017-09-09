@@ -1,6 +1,8 @@
 package co.com.exile.exile.task;
 
 
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,14 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
 
     private JSONArray multimedia;
     private onMultimediaClickListener multimediaClickListener;
+    private onMultimediaUpdate multimediaUpdate;
 
     MultimediaListAdapter(onMultimediaClickListener multimediaClickListener) {
         this.multimediaClickListener = multimediaClickListener;
+    }
+
+    void setMultimediaUpdate(onMultimediaUpdate multimediaUpdate) {
+        this.multimediaUpdate = multimediaUpdate;
     }
 
     @Override
@@ -35,6 +42,11 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
         notifyDataSetChanged();
     }
 
+    final void notifyMultimediaChanged() {
+        notifyDataSetChanged();
+        multimediaUpdate.onUpdate();
+    }
+
     @Override
     public void onBindViewHolder(MultimediaViewHolder holder, int position) {
         try {
@@ -43,6 +55,12 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
                 holder.playBtn.setImageResource(R.drawable.ic_pause_circle_outline_24dp);
             } else {
                 holder.playBtn.setImageResource(R.drawable.ic_play_circle_outline_24dp);
+            }
+            //// TODO: 8/09/17 agregar los indicadores de carga del audio
+            if (file.has("isLoading")) {
+                ((CardView) holder.itemView).setCardBackgroundColor(Color.parseColor("#b2b2b2"));
+            } else {
+                ((CardView) holder.itemView).setCardBackgroundColor(Color.parseColor("#ffad1f"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -59,6 +77,10 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
 
     interface onMultimediaClickListener {
         void onClick(JSONObject multimedia, MultimediaListAdapter adapter);
+    }
+
+    interface onMultimediaUpdate {
+        void onUpdate();
     }
 
     class MultimediaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

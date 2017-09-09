@@ -14,6 +14,7 @@
         android:scaleType="centerInside"
         app:srcCompat="@drawable/ic_headset_24dp" />
 
+    <!--todo agregar el componente para indicar subida y cancelacion de subida-->
     <ImageButton
         android:id="@+id/play_btn"
         style="@style/Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
