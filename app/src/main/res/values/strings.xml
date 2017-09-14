@@ -20,7 +20,7 @@
     <string name="add">add</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="message_hint">Escribir mensaje</string>
-    <string name="text_message">\uD83D\uDC69\u200D\uD83C\uDFA4 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in ex eros.</string>
+    <string name="text_message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in ex eros.</string>
     <string name="title_activity_report">Reporte</string>
     <string name="attach_file">Adjuntar un archivo</string>
     <string name="send">Enviar</string>

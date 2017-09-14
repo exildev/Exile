@@ -17,7 +17,9 @@
 
         <include layout="@layout/chat_message_me_audio" />
 
-        <include layout="@layout/chat_message_you_top" />
+        <include
+            android:id="@+id/message_you_top"
+            layout="@layout/chat_message_you_top" />
 
         <include layout="@layout/chat_message_you_center" />
 

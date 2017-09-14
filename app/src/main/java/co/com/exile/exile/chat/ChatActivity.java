@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.text.emoji.widget.EmojiTextView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -41,12 +43,14 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
     private MediaRecorder mRecorder = null;
     private MediaPlayer mPlayer = null;
 
+    private String emojiText = "\uD83E\uDD14  \uD83D\uDE44";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Sean Spencer");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -56,7 +60,7 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
             }
         });
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = findViewById(R.id.fab);
 
         fab.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -78,10 +82,10 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
             }
         });
 
-        final ImageView takePicture = (ImageView) findViewById(R.id.take_picture);
+        final ImageView takePicture = findViewById(R.id.take_picture);
 
 
-        GifEditText editText = (GifEditText) findViewById(R.id.message_input);
+        GifEditText editText = findViewById(R.id.message_input);
         editText.setOnGifIsSelected(this);
 
         editText.addTextChangedListener(new TextWatcher() {
@@ -110,6 +114,13 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
         File cacheDir = getExternalCacheDir();
         mFileName = cacheDir != null ? cacheDir.getAbsolutePath() : "";
         mFileName += "/audiorecordtest.3gp";
+
+
+        FrameLayout message = findViewById(R.id.message_you_top);
+        FrameLayout container = (FrameLayout) message.getChildAt(0);
+        EmojiTextView tv = (EmojiTextView) container.getChildAt(0);
+        tv.setText(emojiText + " " + emojiText + " tales pascuales");
+        Log.i("message", container.getChildAt(0).getClass().toString());
     }
 
     public void openPicker(View view) {
@@ -119,7 +130,7 @@ public class ChatActivity extends AppCompatActivity implements GifEditText.OnGif
 
     @Override
     public void onGifIsSelected(Uri contentUri) {
-        LinearLayout container = (LinearLayout) findViewById(R.id.messages_container);
+        LinearLayout container = findViewById(R.id.messages_container);
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View message = inflater.inflate(R.layout.chat_message_me_gif, container, false);
