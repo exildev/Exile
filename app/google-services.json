@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "520600142257",
+    "firebase_url": "https://tale-fbf51.firebaseio.com",
+    "project_id": "tale-fbf51",
+    "storage_bucket": "tale-fbf51.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520600142257:android:6e855f1e153a9150",
+        "android_client_info": {
+          "package_name": "co.com.exile.exile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520600142257-apomt06cq4d8p0h351janpdvsd7lsbd6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgGL1ur67tGixDsqe31H7p7VH196RUUYg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

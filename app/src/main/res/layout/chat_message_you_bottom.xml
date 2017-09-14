@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="36dp"
-    android:layout_marginRight="36dp"
     android:clipToPadding="false"
     tools:showIn="@layout/activity_chat">
 
@@ -14,13 +13,11 @@
         android:layout_gravity="end"
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="2dp"
-        android:layout_marginLeft="42dp"
-        android:layout_marginRight="2dp"
         android:layout_marginStart="42dp"
         android:background="@drawable/card_background_you_bottom"
         android:elevation="1dp">
 
-        <TextView
+        <android.support.text.emoji.widget.EmojiTextView
             style="@style/Base.TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +30,6 @@
         android:layout_height="30dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="6dp"
         android:layout_marginStart="6dp"
         android:src="@drawable/profile" />
 </FrameLayout>

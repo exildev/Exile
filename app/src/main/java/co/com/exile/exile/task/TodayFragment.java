@@ -109,7 +109,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         File dir = getActivity().getExternalCacheDir();
         assert dir != null;
         mFileName = dir.getAbsolutePath();
-        mFileName += "/audiorecord.aac";
+        mFileName += getString(R.string.audio_filename);
         mPlayer = new MediaPlayer();
     }
 
