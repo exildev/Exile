@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.liuguangqiang.ipicker.IPicker;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
@@ -563,6 +564,13 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         }
     }
 
+    private void showImages() {
+        String[] list = {"http://104.236.33.228:8000/media/1502985741355.jpg"};
+        new ImageViewer.Builder(getContext(), list)
+                .setStartPosition(0)
+                .show();
+    }
+
     @Override
     public void tryStartRecord() {
         onRecord(true, null, null);
@@ -584,6 +592,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     break;
                 case 1:
                     Log.i("show", multimedia.toString());
+                    showImages();
                     break;
                 default:
                     break;
