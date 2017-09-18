@@ -54,7 +54,8 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     @Override
     public void onBindViewHolder(final TaskViewHolder holder, int position) {
         try {
-            JSONObject task = tasks.getJSONObject(position);
+            JSONObject noti = tasks.getJSONObject(position);
+            JSONObject task = noti.getJSONObject("tarea");
 
             holder.title.setText(task.getString("nombre"));
             holder.description.setText(task.getString("descripcion"));
@@ -64,7 +65,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.subTasks.setLayoutManager(layoutManager);
             holder.subTasks.setHasFixedSize(true);
             holder.subTasks.setAdapter(adapter);
-            adapter.setSubTasks(task.getJSONArray("subtareas"));
+            adapter.setSubTasks(noti.getJSONArray("subnotificaciones"));
 
             final MultimediaListAdapter multimediaListAdapter = new MultimediaListAdapter(multimediaClickListener);
             LinearLayoutManager multimediaLayoutManager = new LinearLayoutManager(holder.multimedia.getContext());
@@ -74,7 +75,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.multimedia.setHasFixedSize(true);
             holder.multimedia.setAdapter(multimediaListAdapter);
             holder.multimediaAdapter = multimediaListAdapter;
-            multimediaListAdapter.setMultimedia(task.getJSONArray("multimedia"));
+            multimediaListAdapter.setMultimedia(noti.getJSONArray("multimedia"));
             multimediaListAdapter.setMultimediaUpdate(new MultimediaListAdapter.onMultimediaUpdate() {
                 @Override
                 public void onUpdate() {

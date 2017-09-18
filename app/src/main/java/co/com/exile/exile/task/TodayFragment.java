@@ -270,7 +270,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 .addFileToUpload(mFileName, "archivo")
                 .setNotificationConfig(notificationConfig)
                 .setMaxRetries(1)
-                .addParameter("tarea", task.getInt("id") + "")
+                .addParameter("notificacion", task.getInt("id") + "")
                 .addParameter("tipo", getString(R.string.param_multimedia_audio))
                 .setDelegate(new UploadStatusDelegate() {
                     @Override
@@ -294,9 +294,15 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                             Snackbar.make(view, "Archivo enviado con exito", 800).show();
 
                             Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
-
-                            file.remove("isLoading");
-                            adapter.notifyMultimediaChanged();
+                            try {
+                                JSONObject multimedia = new JSONObject(serverResponse.getBodyAsString());
+                                String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
+                                file.remove("isLoading");
+                                file.put("url", url);
+                                adapter.notifyMultimediaChanged();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             JSONArray newMultimedia = new JSONArray();
                             try {
