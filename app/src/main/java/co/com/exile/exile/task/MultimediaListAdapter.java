@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +53,20 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
     public void onBindViewHolder(MultimediaViewHolder holder, int position) {
         try {
             JSONObject file = multimedia.getJSONObject(position);
+
+            if (file.getInt("tipo") == 1) {
+                Picasso
+                        .with(holder.img.getContext())
+                        .load(file.getString("url"))
+                        .resizeDimen(R.dimen.multimedia_size, R.dimen.multimedia_size)
+                        .centerCrop()
+                        .into(holder.img);
+                holder.playBtn.setVisibility(View.GONE);
+            } else {
+                holder.img.setImageResource(R.drawable.ic_headset_24dp);
+                holder.playBtn.setVisibility(View.VISIBLE);
+            }
+
             if (file.has("isPlaying")) {
                 holder.playBtn.setImageResource(R.drawable.ic_pause_circle_outline_24dp);
             } else {

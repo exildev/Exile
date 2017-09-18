@@ -23,6 +23,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     private SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener;
     private MultimediaListAdapter.onMultimediaClickListener multimediaClickListener;
     private OnRecordVoice mOnRecordVoice;
+    private OnImageClick mOnImageClick;
 
     TaskListAdapter setmCheckedChangeListener(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener) {
         this.mCheckedChangeListener = mCheckedChangeListener;
@@ -36,6 +37,11 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
 
     TaskListAdapter setMultimediaClickListener(MultimediaListAdapter.onMultimediaClickListener multimediaClickListener) {
         this.multimediaClickListener = multimediaClickListener;
+        return this;
+    }
+
+    TaskListAdapter setOnImageClick(OnImageClick mOnImageClick) {
+        this.mOnImageClick = mOnImageClick;
         return this;
     }
 
@@ -120,6 +126,10 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         void tryStopRecord(JSONObject task, MultimediaListAdapter adapter);
     }
 
+    interface OnImageClick {
+        void onImageClick(JSONObject task, MultimediaListAdapter adapter);
+    }
+
     class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
@@ -129,6 +139,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         ImageButton voiceBtn;
         RecyclerView multimedia;
         MultimediaListAdapter multimediaAdapter;
+        ImageButton imageButton;
 
         TaskViewHolder(View itemView) {
             super(itemView);
@@ -139,6 +150,7 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             viewCompleted = itemView.findViewById(R.id.view_completed);
             voiceBtn = itemView.findViewById(R.id.voice_btn);
             multimedia = itemView.findViewById(R.id.multimedia);
+            imageButton = itemView.findViewById(R.id.image_btn);
 
             voiceBtn.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -165,6 +177,17 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
                             break;
                     }
                     return true;
+                }
+            });
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        mOnImageClick.onImageClick(tasks.getJSONObject(getAdapterPosition()), multimediaAdapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
