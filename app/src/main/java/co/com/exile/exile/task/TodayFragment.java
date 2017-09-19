@@ -565,8 +565,8 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         }
     }
 
-    private void showImages() {
-        String[] list = {"http://104.236.33.228:8000/media/1502985741355.jpg"};
+    private void showImages(JSONObject multimedia) throws JSONException {
+        String[] list = {multimedia.getString("url")};
         new ImageViewer.Builder(getContext(), list)
                 .setStartPosition(0)
                 .show();
@@ -593,7 +593,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     break;
                 case 1:
                     Log.i("show", multimedia.toString());
-                    showImages();
+                    showImages(multimedia);
                     break;
                 default:
                     break;
