@@ -54,7 +54,7 @@ import co.com.exile.exile.network.VolleySingleton;
  * Use the {@link TodayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener, TaskListAdapter.OnImageClick {
+public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener, TaskListAdapter.OnImageClick, TaskListAdapter.OnMainButtonClick {
 
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -89,7 +89,8 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 .setmCheckedChangeListener(this)
                 .setmOnRecordVoice(this)
                 .setMultimediaClickListener(this)
-                .setOnImageClick(this);
+                .setOnImageClick(this)
+                .setMainButtonClick(this);
         reportList.setAdapter(mAdapter);
 
         mSwipe = view.findViewById(R.id.swipe);
@@ -619,5 +620,25 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 }
             }
         });
+    }
+
+    @Override
+    public void onDeleteClick(JSONObject task) {
+        try {
+            JSONArray multimedia = task.getJSONArray("multimedia");
+            for (int i = 0; i < multimedia.length(); i++) {
+                JSONObject file = multimedia.getJSONObject(i);
+                if (file.has("selected")) {
+                    Log.i(LOG_TAG, "delete multimedia " + file.toString());
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDoneClick(JSONObject task) {
+        Log.i(LOG_TAG, "done task " + task.toString());
     }
 }

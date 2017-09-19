@@ -23,6 +23,7 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
     private JSONArray multimedia;
     private onMultimediaClickListener multimediaClickListener;
     private onMultimediaUpdate multimediaUpdate;
+    private onMultimediaLongClick multimediaLongClick;
 
     MultimediaListAdapter(onMultimediaClickListener multimediaClickListener) {
         this.multimediaClickListener = multimediaClickListener;
@@ -30,6 +31,10 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
 
     void setMultimediaUpdate(onMultimediaUpdate multimediaUpdate) {
         this.multimediaUpdate = multimediaUpdate;
+    }
+
+    void setMultimediaLongClick(onMultimediaLongClick multimediaLongClick) {
+        this.multimediaLongClick = multimediaLongClick;
     }
 
     @Override
@@ -67,6 +72,16 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
                 holder.playBtn.setVisibility(View.VISIBLE);
             }
 
+            if (file.has("selected")) {
+                int padding = holder.img.getContext().getResources().getDimensionPixelOffset(R.dimen.multimedia_selected_padding);
+                holder.img.setBackgroundResource(R.drawable.selected_bg);
+                holder.img.setPaddingRelative(padding, padding, padding, padding);
+            } else {
+                int padding = 0;
+                holder.img.setBackgroundColor(Color.parseColor("#00000000"));
+                holder.img.setPaddingRelative(padding, padding, padding, padding);
+            }
+
             if (file.has("isPlaying")) {
                 holder.playBtn.setImageResource(R.drawable.ic_pause_circle_outline_24dp);
             } else {
@@ -99,7 +114,11 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
         void onUpdate();
     }
 
-    class MultimediaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    interface onMultimediaLongClick {
+        void onLongClick(JSONObject multimedia);
+    }
+
+    class MultimediaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView img;
         ImageButton playBtn;
@@ -110,6 +129,7 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
             playBtn = itemView.findViewById(R.id.play_btn);
             itemView.setOnClickListener(this);
             playBtn.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
@@ -119,6 +139,16 @@ class MultimediaListAdapter extends RecyclerView.Adapter<MultimediaListAdapter.M
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            try {
+                multimediaLongClick.onLongClick(multimedia.getJSONObject(getAdapterPosition()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return true;
         }
     }
 }

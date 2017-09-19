@@ -129,6 +129,7 @@
         </LinearLayout>
 
         <ImageButton
+            android:id="@+id/main_button"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="36dp"
             android:layout_height="36dp"
