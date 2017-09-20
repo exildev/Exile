@@ -304,6 +304,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                                 String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
                                 file.remove("isLoading");
                                 file.put("url", url);
+                                file.put("id", multimedia.getInt("id"));
                                 adapter.notifyMultimediaChanged();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -401,6 +402,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                                 String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
                                 file.remove("isLoading");
                                 file.put("url", url);
+                                file.put("id", multimedia.getInt("id"));
                                 adapter.notifyMultimediaChanged();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -442,6 +444,51 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     }
                 })
                 .startUpload();
+    }
+
+    private void deleteMultimedia(JSONObject task) throws JSONException {
+        final JSONArray multimedia = task.getJSONArray("multimedia");
+        String serviceUrl = getString(R.string.multimedia_delete);
+
+        String url = getString(R.string.url, serviceUrl);
+        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loadData();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //hideLoading();
+                        //Log.e(LOG_TAG, new String(error.networkResponse.data));
+                        mSwipe.setRefreshing(false);
+                        Snackbar.make(getView(), "Error al hacer la consulta", 800).show();
+                    }
+                }) {
+
+            public byte[] getBody() throws AuthFailureError {
+                String body = "";
+                for (int i = 0; i < multimedia.length(); i++) {
+                    JSONObject file;
+                    try {
+                        file = multimedia.getJSONObject(i);
+                        if (file.has("selected")) {
+                            if (!body.equals("")) {
+                                body += "&";
+                            }
+                            body += "multi_ids=" + String.valueOf(file.getInt("id"));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return body.getBytes();
+            }
+        };
+        VolleySingleton.getInstance(this.getContext()).addToRequestQueue(loginRequest);
+        mSwipe.setRefreshing(true);
     }
 
     @Override
@@ -625,13 +672,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
     @Override
     public void onDeleteClick(JSONObject task) {
         try {
-            JSONArray multimedia = task.getJSONArray("multimedia");
-            for (int i = 0; i < multimedia.length(); i++) {
-                JSONObject file = multimedia.getJSONObject(i);
-                if (file.has("selected")) {
-                    Log.i(LOG_TAG, "delete multimedia " + file.toString());
-                }
-            }
+            deleteMultimedia(task);
         } catch (JSONException e) {
             e.printStackTrace();
         }
