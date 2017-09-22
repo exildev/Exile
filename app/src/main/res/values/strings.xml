@@ -126,4 +126,5 @@
     <string name="show_completed_subtasks">Ver tareas completadas (%1$d)</string>
     <string name="hide_completed_subtasks">Ocultar tareas completadas</string>
     <string name="audio_filename">/audiorecord.aac</string>
+    <string name="param_multimedia_image">1</string>
 </resources>

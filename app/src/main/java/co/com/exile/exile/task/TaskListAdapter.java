@@ -23,6 +23,8 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     private SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener;
     private MultimediaListAdapter.onMultimediaClickListener multimediaClickListener;
     private OnRecordVoice mOnRecordVoice;
+    private OnImageClick mOnImageClick;
+    private OnMainButtonClick mainButtonClick;
 
     TaskListAdapter setmCheckedChangeListener(SubTaskListAdapter.onSubTaskCheckedChangeListener mCheckedChangeListener) {
         this.mCheckedChangeListener = mCheckedChangeListener;
@@ -36,6 +38,16 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
 
     TaskListAdapter setMultimediaClickListener(MultimediaListAdapter.onMultimediaClickListener multimediaClickListener) {
         this.multimediaClickListener = multimediaClickListener;
+        return this;
+    }
+
+    TaskListAdapter setOnImageClick(OnImageClick mOnImageClick) {
+        this.mOnImageClick = mOnImageClick;
+        return this;
+    }
+
+    TaskListAdapter setMainButtonClick(OnMainButtonClick mainButtonClick) {
+        this.mainButtonClick = mainButtonClick;
         return this;
     }
 
@@ -54,7 +66,8 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
     @Override
     public void onBindViewHolder(final TaskViewHolder holder, int position) {
         try {
-            JSONObject task = tasks.getJSONObject(position);
+            final JSONObject noti = tasks.getJSONObject(position);
+            JSONObject task = noti.getJSONObject("tarea");
 
             holder.title.setText(task.getString("nombre"));
             holder.description.setText(task.getString("descripcion"));
@@ -64,9 +77,9 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.subTasks.setLayoutManager(layoutManager);
             holder.subTasks.setHasFixedSize(true);
             holder.subTasks.setAdapter(adapter);
-            adapter.setSubTasks(task.getJSONArray("subtareas"));
+            adapter.setSubTasks(noti.getJSONArray("subnotificaciones"));
 
-            final MultimediaListAdapter multimediaListAdapter = new MultimediaListAdapter(multimediaClickListener);
+            final MultimediaListAdapter multimediaListAdapter = new MultimediaListAdapter(holder);
             LinearLayoutManager multimediaLayoutManager = new LinearLayoutManager(holder.multimedia.getContext());
             multimediaLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             multimediaLayoutManager.setStackFromEnd(true);
@@ -74,14 +87,32 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             holder.multimedia.setHasFixedSize(true);
             holder.multimedia.setAdapter(multimediaListAdapter);
             holder.multimediaAdapter = multimediaListAdapter;
-            multimediaListAdapter.setMultimedia(task.getJSONArray("multimedia"));
+            multimediaListAdapter.setMultimedia(noti.getJSONArray("multimedia"));
             multimediaListAdapter.setMultimediaUpdate(new MultimediaListAdapter.onMultimediaUpdate() {
                 @Override
                 public void onUpdate() {
                     holder.multimedia.smoothScrollToPosition(multimediaListAdapter.getItemCount() - 1);
                 }
             });
+            multimediaListAdapter.setMultimediaLongClick(new MultimediaListAdapter.onMultimediaLongClick() {
+                @Override
+                public void onLongClick(JSONObject multimedia) {
+                    try {
+                        multimedia.put("selected", true);
+                        multimediaListAdapter.notifyDataSetChanged();
+                        noti.put("selecting", true);
+                        holder.mainButton.setImageResource(R.drawable.ic_delete_24dp);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
+            if (noti.has("selecting")) {
+                holder.mainButton.setImageResource(R.drawable.ic_delete_24dp);
+            } else {
+                holder.mainButton.setImageResource(R.drawable.ic_done_24dp);
+            }
 
             String text = holder.viewCompleted.getContext().getString(R.string.show_completed_subtasks, adapter.countCompleted());
             holder.viewCompleted.setText(text);
@@ -119,7 +150,17 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         void tryStopRecord(JSONObject task, MultimediaListAdapter adapter);
     }
 
-    class TaskViewHolder extends RecyclerView.ViewHolder {
+    interface OnImageClick {
+        void onImageClick(JSONObject task, MultimediaListAdapter adapter);
+    }
+
+    interface OnMainButtonClick {
+        void onDeleteClick(JSONObject task);
+
+        void onDoneClick(JSONObject task);
+    }
+
+    class TaskViewHolder extends RecyclerView.ViewHolder implements MultimediaListAdapter.onMultimediaClickListener {
 
         TextView title;
         TextView description;
@@ -128,6 +169,8 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
         ImageButton voiceBtn;
         RecyclerView multimedia;
         MultimediaListAdapter multimediaAdapter;
+        ImageButton imageButton;
+        ImageButton mainButton;
 
         TaskViewHolder(View itemView) {
             super(itemView);
@@ -138,6 +181,8 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
             viewCompleted = itemView.findViewById(R.id.view_completed);
             voiceBtn = itemView.findViewById(R.id.voice_btn);
             multimedia = itemView.findViewById(R.id.multimedia);
+            imageButton = itemView.findViewById(R.id.image_btn);
+            mainButton = itemView.findViewById(R.id.main_button);
 
             voiceBtn.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -166,6 +211,65 @@ class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolde
                     return true;
                 }
             });
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        mOnImageClick.onImageClick(tasks.getJSONObject(getAdapterPosition()), multimediaAdapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            mainButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        JSONObject task = tasks.getJSONObject(getAdapterPosition());
+                        if (task.has("selecting")) {
+                            mainButtonClick.onDeleteClick(task);
+                        } else {
+                            mainButtonClick.onDoneClick(task);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onClick(JSONObject multimedia, MultimediaListAdapter adapter) {
+            try {
+                JSONObject task = tasks.getJSONObject(getAdapterPosition());
+                if (task.has("selecting")) {
+                    if (multimedia.has("selected")) {
+                        multimedia.remove("selected");
+                        tryDeselect(task);
+                    } else {
+                        multimedia.put("selected", true);
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    multimediaClickListener.onClick(multimedia, adapter);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void tryDeselect(JSONObject task) throws JSONException {
+            JSONArray multimedia = task.getJSONArray("multimedia");
+            for (int i = 0; i < multimedia.length(); i++) {
+                JSONObject file = multimedia.getJSONObject(i);
+                if (file.has("selected")) {
+                    return;
+                }
+            }
+            task.remove("selecting");
+            mainButton.setImageResource(R.drawable.ic_done_24dp);
         }
     }
 }

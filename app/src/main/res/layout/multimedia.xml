@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/multimedia_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/multimedia_size"
+        android:layout_height="@dimen/multimedia_size"
+        android:background="@drawable/selected_bg"
         android:contentDescription="@null"
         android:scaleType="centerInside"
         app:srcCompat="@drawable/ic_headset_24dp" />

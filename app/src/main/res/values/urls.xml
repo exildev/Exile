@@ -13,6 +13,7 @@
     <string name="subtask_uncomplete">/operacion/sub/completado/delete/%1$d/</string>
     <string name="multimedia_add">/operacion/multimedia/form/</string>
     <string name="profile_data">/usuarios/is/login/</string>
+    <string name="multimedia_delete">/operacion/multimedia/delete/list/</string>
 
     <string name="boolean_param_true">True</string>
     <string name="boolean_param_false">False</string>

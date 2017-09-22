@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.liuguangqiang.ipicker.IPicker;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
@@ -41,6 +43,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
@@ -51,7 +54,7 @@ import co.com.exile.exile.network.VolleySingleton;
  * Use the {@link TodayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener {
+public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener, TaskListAdapter.OnImageClick, TaskListAdapter.OnMainButtonClick {
 
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -85,7 +88,9 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         mAdapter = new TaskListAdapter()
                 .setmCheckedChangeListener(this)
                 .setmOnRecordVoice(this)
-                .setMultimediaClickListener(this);
+                .setMultimediaClickListener(this)
+                .setOnImageClick(this)
+                .setMainButtonClick(this);
         reportList.setAdapter(mAdapter);
 
         mSwipe = view.findViewById(R.id.swipe);
@@ -270,7 +275,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                 .addFileToUpload(mFileName, "archivo")
                 .setNotificationConfig(notificationConfig)
                 .setMaxRetries(1)
-                .addParameter("tarea", task.getInt("id") + "")
+                .addParameter("notificacion", task.getInt("id") + "")
                 .addParameter("tipo", getString(R.string.param_multimedia_audio))
                 .setDelegate(new UploadStatusDelegate() {
                     @Override
@@ -294,9 +299,16 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                             Snackbar.make(view, "Archivo enviado con exito", 800).show();
 
                             Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
-
-                            file.remove("isLoading");
-                            adapter.notifyMultimediaChanged();
+                            try {
+                                JSONObject multimedia = new JSONObject(serverResponse.getBodyAsString());
+                                String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
+                                file.remove("isLoading");
+                                file.put("url", url);
+                                file.put("id", multimedia.getInt("id"));
+                                adapter.notifyMultimediaChanged();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             JSONArray newMultimedia = new JSONArray();
                             try {
@@ -334,6 +346,149 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     }
                 })
                 .startUpload();
+    }
+
+    private void uploadImage(final JSONObject task, final MultimediaListAdapter adapter, String path) throws FileNotFoundException, MalformedURLException, JSONException {
+
+        final JSONObject file = new JSONObject();
+        file.put("url", "file:" + path);
+        file.put("tipo", 1);
+        file.put("isLoading", true);
+
+        final JSONArray multimedia = task.getJSONArray("multimedia");
+        multimedia.put(file);
+        adapter.notifyMultimediaChanged();
+
+
+        String serviceUrl = getString(R.string.multimedia_add);
+        String url = getString(R.string.url, serviceUrl);
+        UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
+                .setTitle("Subiendo archivo")
+                .setInProgressMessage("Subiendo archivo a [[UPLOAD_RATE]] ([[PROGRESS]])")
+                .setErrorMessage("Hubo un error al subir el archivo")
+                .setCompletedMessage("Subida completada exitosamente en [[ELAPSED_TIME]]")
+                .setAutoClearOnSuccess(true);
+
+        new MultipartUploadRequest(this.getContext(), url)
+                .addFileToUpload(path, "archivo")
+                .setNotificationConfig(notificationConfig)
+                .setMaxRetries(1)
+                .addParameter("notificacion", task.getInt("id") + "")
+                .addParameter("tipo", getString(R.string.param_multimedia_image))
+                .setDelegate(new UploadStatusDelegate() {
+                    @Override
+                    public void onProgress(UploadInfo uploadInfo) {
+
+                    }
+
+                    @Override
+                    public void onError(UploadInfo uploadInfo, Exception exception) {
+                        View view = getView();
+                        assert view != null;
+                        Snackbar.make(view, "Hubo un error al subir el archivo", 800).show();
+                        Log.e("send", exception.getMessage());
+                    }
+
+                    @Override
+                    public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
+                        if (serverResponse.getHttpCode() == 200 || serverResponse.getHttpCode() == 201) {
+                            View view = getView();
+                            assert view != null;
+                            Snackbar.make(view, "Archivo enviado con exito", 800).show();
+
+                            Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
+                            try {
+                                JSONObject multimedia = new JSONObject(serverResponse.getBodyAsString());
+                                String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
+                                file.remove("isLoading");
+                                file.put("url", url);
+                                file.put("id", multimedia.getInt("id"));
+                                adapter.notifyMultimediaChanged();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            JSONArray newMultimedia = new JSONArray();
+                            try {
+                                for (int i = 0; i < multimedia.length(); i++) {
+                                    if (multimedia.getJSONObject(i) != file) {
+                                        newMultimedia.put(multimedia.getJSONObject(i));
+                                    }
+                                }
+                                task.put("multimedia", newMultimedia);
+                                adapter.setMultimedia(newMultimedia);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            View view = getView();
+                            assert view != null;
+                            Snackbar.make(view, "Hubo un error al subir el archivo", 800).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(UploadInfo uploadInfo) {
+                        JSONArray newMultimedia = new JSONArray();
+                        try {
+                            for (int i = 0; i < multimedia.length(); i++) {
+                                if (multimedia.getJSONObject(i) != file) {
+                                    newMultimedia.put(multimedia.getJSONObject(i));
+                                }
+                            }
+                            task.put("multimedia", newMultimedia);
+                            adapter.setMultimedia(newMultimedia);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .startUpload();
+    }
+
+    private void deleteMultimedia(JSONObject task) throws JSONException {
+        final JSONArray multimedia = task.getJSONArray("multimedia");
+        String serviceUrl = getString(R.string.multimedia_delete);
+
+        String url = getString(R.string.url, serviceUrl);
+        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loadData();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //hideLoading();
+                        //Log.e(LOG_TAG, new String(error.networkResponse.data));
+                        mSwipe.setRefreshing(false);
+                        Snackbar.make(getView(), "Error al hacer la consulta", 800).show();
+                    }
+                }) {
+
+            public byte[] getBody() throws AuthFailureError {
+                String body = "";
+                for (int i = 0; i < multimedia.length(); i++) {
+                    JSONObject file;
+                    try {
+                        file = multimedia.getJSONObject(i);
+                        if (file.has("selected")) {
+                            if (!body.equals("")) {
+                                body += "&";
+                            }
+                            body += "multi_ids=" + String.valueOf(file.getInt("id"));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return body.getBytes();
+            }
+        };
+        VolleySingleton.getInstance(this.getContext()).addToRequestQueue(loginRequest);
+        mSwipe.setRefreshing(true);
     }
 
     @Override
@@ -457,6 +612,13 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         }
     }
 
+    private void showImages(JSONObject multimedia) throws JSONException {
+        String[] list = {multimedia.getString("url")};
+        new ImageViewer.Builder(getContext(), list)
+                .setStartPosition(0)
+                .show();
+    }
+
     @Override
     public void tryStartRecord() {
         onRecord(true, null, null);
@@ -478,6 +640,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
                     break;
                 case 1:
                     Log.i("show", multimedia.toString());
+                    showImages(multimedia);
                     break;
                 default:
                     break;
@@ -485,5 +648,38 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onImageClick(final JSONObject task, final MultimediaListAdapter adapter) {
+        IPicker.setLimit(1);
+        IPicker.open(getContext());
+        IPicker.setOnSelectedListener(new IPicker.OnSelectedListener() {
+            @Override
+            public void onSelected(List<String> paths) {
+                if (paths.size() > 0) {
+                    Log.i("imge", paths.get(0));
+                    try {
+                        uploadImage(task, adapter, paths.get(0));
+                    } catch (FileNotFoundException | MalformedURLException | JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDeleteClick(JSONObject task) {
+        try {
+            deleteMultimedia(task);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDoneClick(JSONObject task) {
+        Log.i(LOG_TAG, "done task " + task.toString());
     }
 }

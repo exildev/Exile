@@ -7,6 +7,8 @@ import android.support.text.emoji.FontRequestEmojiCompatConfig;
 import android.support.v4.provider.FontRequest;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import shortbread.Shortbread;
 
 
@@ -45,5 +47,6 @@ public class App extends Application {
                 });
         EmojiCompat.init(config);
         Shortbread.create(this);
+        Fresco.initialize(this);
     }
 }
