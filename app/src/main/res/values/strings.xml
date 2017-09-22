@@ -35,7 +35,7 @@
     <string name="help_title">Ayuda</string>
     <string name="schedule_title">Schedule</string>
     <string name="title_activity_help">Ayuda</string>
-    <string name="title_activity_account">AccountActivity</string>
+    <string name="title_activity_account">Cuenta</string>
     <string name="title_activity_notification">Notificaciones</string>
 
     <!-- Strings related to Settings -->
@@ -127,4 +127,8 @@
     <string name="hide_completed_subtasks">Ocultar tareas completadas</string>
     <string name="audio_filename">/audiorecord.aac</string>
     <string name="param_multimedia_image">1</string>
+    <string name="actual_password">Contraseña actual</string>
+    <string name="new_password">Contraseña nueva</string>
+    <string name="new_password_confirm">Confirmar contraseña</string>
+    <string name="loading">Cargando…</string>
 </resources>

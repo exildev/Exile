@@ -8,12 +8,13 @@
     <string name="report_clients_url">/operacion/cliente/list/</string>
     <string name="report_url">/novedades/reporte/form/</string>
     <string name="report_list_url">/novedades/reporte/list/?estado=%1$s</string>
-    <string name="task_url">/operacion/tarea/list/</string>
+    <string name="task_url">/operacion/notificacion/list/</string>
     <string name="subtask_complete">/operacion/sub/completado/form/</string>
     <string name="subtask_uncomplete">/operacion/sub/completado/delete/%1$d/</string>
     <string name="multimedia_add">/operacion/multimedia/form/</string>
     <string name="multimedia_delete">/operacion/multimedia/delete/list/</string>
     <string name="profile_data">/usuarios/is/login/</string>
+    <string name="change_password">/usuarios/change/password/</string>
 
     <string name="boolean_param_true">True</string>
     <string name="boolean_param_false">False</string>

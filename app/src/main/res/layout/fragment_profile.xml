@@ -165,7 +165,8 @@
 
             <include
                 android:id="@+id/notification_button"
-                layout="@layout/profile_adjust_notificactions" />
+                layout="@layout/profile_adjust_notificactions"
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/help_button"
