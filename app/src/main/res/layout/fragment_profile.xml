@@ -22,8 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile2" />
+                android:scaleType="centerCrop" />
 
             <ImageButton
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
@@ -42,29 +41,26 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/name"
                 style="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Auria Devney" />
+                android:layout_marginTop="16dp" />
 
             <TextView
+                android:id="@+id/email"
                 style="@style/Base.TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:text="\@auriadevney" />
+                android:layout_marginStart="16dp" />
 
             <TextView
+                android:id="@+id/charge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="Mobile Developer" />
+                android:layout_marginTop="8dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -81,7 +77,8 @@
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
                 android:paddingBottom="16dp"
-                android:paddingTop="16dp">
+                android:paddingTop="16dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -146,18 +143,18 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="1dip"
                 android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/darker_gray"
+                android:visibility="gone" />
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/profile_options_subtitle" />
@@ -182,7 +179,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
             android:layout_marginTop="245dp"
             android:tint="#fff"
             app:fabSize="normal"
