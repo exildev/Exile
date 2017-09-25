@@ -26,6 +26,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
+    compile('moe.feng:MaterialStepperView:0.2.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    compile('com.github.ganfra:material-spinner:1.1.1') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
     compile 'com.android.support:appcompat-v7:26.0.2'
     compile 'com.android.support:cardview-v7:26.0.2'
     compile 'com.android.support:design:26.0.2'
@@ -43,22 +50,16 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.2.6'
     compile 'net.gotev:uploadservice:3.0.3'
     compile 'com.github.matthiasrobbers:shortbread:1.0.1'
-    compile "com.android.support:support-emoji:26.0.2"
+    compile 'com.android.support:support-emoji:26.0.2'
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile 'com.google.firebase:firebase-core:10.2.6'
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     compile 'com.facebook.fresco:fresco:1.5.0'
     compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
-
-    annotationProcessor 'com.github.matthiasrobbers:shortbread-compiler:1.0.1'
-    compile('moe.feng:MaterialStepperView:0.2.0') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
-    compile('com.github.ganfra:material-spinner:1.1.1') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
     testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.github.matthiasrobbers:shortbread-compiler:1.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
+
 

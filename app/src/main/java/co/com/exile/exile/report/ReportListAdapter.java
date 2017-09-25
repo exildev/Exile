@@ -16,6 +16,7 @@ import co.com.exile.exile.R;
 class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.ReportViewHolder> {
 
     private JSONArray reports;
+    private onReportClickListener reportClickListener;
 
     @Override
     public ReportViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,12 +30,16 @@ class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.ReportVie
         notifyDataSetChanged();
     }
 
+    void setReportClickListener(onReportClickListener reportClickListener) {
+        this.reportClickListener = reportClickListener;
+    }
+
     @Override
     public void onBindViewHolder(ReportViewHolder holder, int position) {
         try {
             JSONObject report = reports.getJSONObject(position);
             String fecha = report.getString("fecha").split(" ")[0];
-            String creatorR = report.getJSONObject("creatorR").getString("nombre");
+            String creatorR = report.getJSONObject("creator").getString("first_name") + " " + report.getJSONObject("creator").getString("last_name");
             holder.title.setText(report.getString("nombre"));
             holder.description.setText("Abierto el " + fecha + " por " + creatorR);
             holder.index.setText("#" + report.getInt("id") + "");
@@ -51,7 +56,11 @@ class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.ReportVie
         return reports.length();
     }
 
-    class ReportViewHolder extends RecyclerView.ViewHolder {
+    interface onReportClickListener {
+        void onClick(JSONObject report);
+    }
+
+    class ReportViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView title;
         TextView description;
@@ -64,6 +73,17 @@ class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.ReportVie
             title = itemView.findViewById(R.id.report_title);
             description = itemView.findViewById(R.id.report_description);
             index = itemView.findViewById(R.id.report_index);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            try {
+                reportClickListener.onClick(reports.getJSONObject(getAdapterPosition()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

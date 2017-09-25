@@ -72,6 +72,13 @@ public class ReportFragment extends Fragment {
         mAdapter = new ReportListAdapter();
         reportList.setAdapter(mAdapter);
 
+        mAdapter.setReportClickListener(new ReportListAdapter.onReportClickListener() {
+            @Override
+            public void onClick(JSONObject report) {
+                openReport(report);
+            }
+        });
+
         mSwipe = view.findViewById(R.id.swipe);
 
         mSwipe.setRefreshing(true);
@@ -85,6 +92,13 @@ public class ReportFragment extends Fragment {
         });
         return view;
     }
+
+    private void openReport(JSONObject report) {
+        Intent intent = new Intent(getContext(), ReportDetailsActivity.class);
+        intent.putExtra("report", report.toString());
+        startActivity(intent);
+    }
+
 
     private void loadData() {
         String t;

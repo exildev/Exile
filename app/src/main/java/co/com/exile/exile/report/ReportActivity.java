@@ -787,7 +787,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
         for (int i = 0; i < attaches.size(); i++) {
             String image = attaches.get(i);
-            upload.addFileToUpload(image, "fotoreporte_set-" + i + "-reporte");
+            upload.addFileToUpload(image, "fotoreporte_set-" + i + "-foto");
         }
         try {
             upload.setDelegate(new UploadStatusDelegate() {

@@ -1,24 +1,30 @@
 package co.com.exile.exile.report;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
+import com.squareup.picasso.Picasso;
 
 import co.com.exile.exile.R;
 
 
 class AttachAdapter extends RecyclerView.Adapter<AttachAdapter.AttachViewHolder> {
 
-    private ArrayList<String> attaches;
+    private String[] attaches;
+    private onFotoClickListener fotoClickListener;
 
+    void setFotoClickListener(onFotoClickListener fotoClickListener) {
+        this.fotoClickListener = fotoClickListener;
+    }
 
-    void setAttaches(ArrayList<String> attaches) {
+    String[] getAttaches() {
+        return attaches;
+    }
+
+    void setAttaches(String[] attaches) {
         this.attaches = attaches;
         notifyDataSetChanged();
     }
@@ -32,18 +38,21 @@ class AttachAdapter extends RecyclerView.Adapter<AttachAdapter.AttachViewHolder>
 
     @Override
     public void onBindViewHolder(AttachViewHolder holder, int position) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 5;
-        Bitmap bitmap = BitmapFactory.decodeFile(attaches.get(position), options);
-        holder.attach.setImageBitmap(bitmap);
+        Picasso.with(holder.attach.getContext())
+                .load(attaches[position])
+                .into(holder.attach);
     }
 
     @Override
     public int getItemCount() {
         if (attaches != null) {
-            return attaches.size();
+            return attaches.length;
         }
         return 0;
+    }
+
+    interface onFotoClickListener {
+        void onClick(int position);
     }
 
     class AttachViewHolder extends RecyclerView.ViewHolder {
@@ -54,6 +63,13 @@ class AttachAdapter extends RecyclerView.Adapter<AttachAdapter.AttachViewHolder>
             super(itemView);
 
             attach = (ImageView) itemView;
+
+            attach.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fotoClickListener.onClick(getAdapterPosition());
+                }
+            });
         }
     }
 }
