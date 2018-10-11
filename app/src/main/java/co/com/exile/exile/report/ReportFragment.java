@@ -23,11 +23,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import co.com.exile.exile.BaseFragment;
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 
 
-public class ReportFragment extends Fragment {
+public class ReportFragment extends BaseFragment {
     public static final int TYPE_OPEN = 1;
     public static final int TYPE_CLOSED = 2;
 
@@ -99,7 +100,6 @@ public class ReportFragment extends Fragment {
         startActivity(intent);
     }
 
-
     private void loadData() {
         String t;
         if (type == TYPE_OPEN) {
@@ -110,7 +110,7 @@ public class ReportFragment extends Fragment {
 
         String serviceUrl = getString(R.string.report_list_url, t);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

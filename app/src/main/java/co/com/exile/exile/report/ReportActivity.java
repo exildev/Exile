@@ -60,11 +60,12 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.com.exile.exile.BaseActivity;
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 import moe.feng.common.stepperview.VerticalStepperItemView;
 
-public class ReportActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener {
+public class ReportActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 3;
     private static final int REQUEST_LOCATION_SETTINGS = 12;
@@ -390,7 +391,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
     private void getTypes() {
         String serviceUrl = getString(R.string.report_type_url);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         getTypes(url, 0);
     }
 
@@ -416,7 +417,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
                             if (response.has("next")) {
                                 String serviceUrl = getString(R.string.report_type_url);
-                                String url = getString(R.string.url, serviceUrl) + "?page=" + response.getInt("next");
+                                String url = getUrl(serviceUrl) + "?page=" + response.getInt("next");
                                 getTypes(url, offset + response.getInt("num_rows"));
                             } else {
                                 renderTypes();
@@ -441,7 +442,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
     private void getPlaces() {
         String serviceUrl = getString(R.string.report_places_url);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         getPlaces(url, 0);
 
     }
@@ -468,7 +469,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
                             if (response.has("next")) {
                                 String serviceUrl = getString(R.string.report_places_url);
-                                String url = getString(R.string.url, serviceUrl) + "?page=" + response.getInt("next");
+                                String url = getUrl(serviceUrl) + "?page=" + response.getInt("next");
                                 getPlaces(url, offset + response.getInt("num_rows"));
                             } else {
                                 renderPlaces();
@@ -493,7 +494,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
     private void getClients() {
         String serviceUrl = getString(R.string.report_clients_url);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         getClients(url, 0);
 
     }
@@ -520,7 +521,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
                             if (response.has("next")) {
                                 String serviceUrl = getString(R.string.report_clients_url);
-                                String url = getString(R.string.url, serviceUrl) + "?page=" + response.getInt("next");
+                                String url = getUrl(serviceUrl) + "?page=" + response.getInt("next");
                                 getClients(url, offset + response.getInt("num_rows"));
                             } else {
                                 renderClients();
@@ -657,7 +658,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
         stopLocationUpdates();
 
         String serviceUrl = getString(R.string.report_url);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -759,7 +760,7 @@ public class ReportActivity extends AppCompatActivity implements GoogleApiClient
 
 
         String serviceUrl = getString(R.string.report_url);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         MultipartUploadRequest upload =
                 new MultipartUploadRequest(getBaseContext(), url)
                         .setNotificationConfig(notificationConfig)

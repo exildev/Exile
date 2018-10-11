@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import co.com.exile.exile.BaseFragment;
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 
@@ -54,7 +55,7 @@ import co.com.exile.exile.network.VolleySingleton;
  * Use the {@link TodayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener, TaskListAdapter.OnImageClick, TaskListAdapter.OnMainButtonClick {
+public class TodayFragment extends BaseFragment implements SubTaskListAdapter.onSubTaskCheckedChangeListener, TaskListAdapter.OnRecordVoice, MultimediaListAdapter.onMultimediaClickListener, TaskListAdapter.OnImageClick, TaskListAdapter.OnMainButtonClick {
 
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -134,13 +135,13 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
     private void loadData() {
 
-        String serviceUrl = getString(R.string.task_url);
+        String serviceUrl = getString(R.string.today_task_url);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.i("response", response.toString());
+
                 try {
                     JSONArray object_list = response.getJSONArray("object_list");
                     mAdapter.setTasks(object_list);
@@ -165,7 +166,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
         String serviceUrl = getString(R.string.subtask_complete);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -211,7 +212,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
         String serviceUrl = getString(R.string.subtask_uncomplete, id);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -263,7 +264,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
 
         String serviceUrl = getString(R.string.multimedia_add);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
                 .setTitle("Subiendo archivo")
                 .setInProgressMessage("Subiendo archivo a [[UPLOAD_RATE]] ([[PROGRESS]])")
@@ -361,7 +362,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
 
 
         String serviceUrl = getString(R.string.multimedia_add);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
                 .setTitle("Subiendo archivo")
                 .setInProgressMessage("Subiendo archivo a [[UPLOAD_RATE]] ([[PROGRESS]])")
@@ -450,7 +451,7 @@ public class TodayFragment extends Fragment implements SubTaskListAdapter.onSubT
         final JSONArray multimedia = task.getJSONArray("multimedia");
         String serviceUrl = getString(R.string.multimedia_delete);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         final StringRequest loginRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

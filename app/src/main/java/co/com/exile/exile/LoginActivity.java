@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import co.com.exile.exile.network.VolleySingleton;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
 
     @Override
@@ -42,15 +42,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        TextInputEditText username = (TextInputEditText) findViewById(R.id.username);
-        TextInputEditText password = (TextInputEditText) findViewById(R.id.password);
+        TextInputEditText username = findViewById(R.id.username);
+        TextInputEditText password = findViewById(R.id.password);
         login(username.getText().toString(), password.getText().toString());
     }
 
     public void login(final String username, final String password) {
         String serviceUrl = getString(R.string.login);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         StringRequest loginRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

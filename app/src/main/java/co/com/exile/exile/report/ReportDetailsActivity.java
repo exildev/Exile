@@ -26,10 +26,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import co.com.exile.exile.BaseActivity;
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 
-public class ReportDetailsActivity extends AppCompatActivity {
+public class ReportDetailsActivity extends BaseActivity {
 
     AttachAdapter fotoAdapter;
 
@@ -94,7 +95,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 loadPhotos(report.getInt("id"));
 
                 ImageView creatorAvatar = findViewById(R.id.creator_avatar);
-                String avatarURl = getString(R.string.url, creator.getString("avatar"));
+                String avatarURl = getUrl(creator.getString("avatar"));
                 Picasso.with(this)
                         .load(avatarURl)
                         .into(creatorAvatar);
@@ -113,7 +114,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
     private void loadPhotos(int id) {
         String serviceUrl = getString(R.string.report_fotos, id);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

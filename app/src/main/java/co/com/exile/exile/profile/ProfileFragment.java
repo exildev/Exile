@@ -35,13 +35,14 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import co.com.exile.exile.BaseFragment;
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends BaseFragment {
     private String avatar_form_url;
 
 
@@ -118,7 +119,7 @@ public class ProfileFragment extends Fragment {
 
     private void uploadAvatar(String path) throws FileNotFoundException, MalformedURLException {
 
-        String url = getString(R.string.url, avatar_form_url);
+        String url = getUrl(avatar_form_url);
         UploadNotificationConfig notificationConfig = new UploadNotificationConfig()
                 .setTitle("Subiendo archivo")
                 .setInProgressMessage("Subiendo archivo a [[UPLOAD_RATE]] ([[PROGRESS]])")
@@ -165,7 +166,7 @@ public class ProfileFragment extends Fragment {
     private void loadProfile(final View rootView) {
         String serviceUrl = getString(R.string.profile_data);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -180,7 +181,8 @@ public class ProfileFragment extends Fragment {
                     charge.setText(response.getString("cargo"));
 
                     ImageView profile = rootView.findViewById(R.id.profile);
-                    String url = getString(R.string.url, response.getString("avatar"));
+                    String url = getUrl(response.getString("avatar"));
+                    Log.e("tales", url);
                     Picasso
                             .with(getContext())
                             .load(url)
