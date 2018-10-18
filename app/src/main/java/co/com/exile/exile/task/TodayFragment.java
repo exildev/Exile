@@ -3,8 +3,10 @@ package co.com.exile.exile.task;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -515,14 +517,10 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
             Log.e("tales5", url);
 
             mPlayer = new MediaPlayer();
+            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mPlayer.setDataSource(url);
             mPlayer.prepare();
-            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mPlayer.start();
-                }
-            });
+            mPlayer.start();
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
@@ -532,7 +530,7 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
                 }
             });
         } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
+            Log.e(LOG_TAG, "prepare() failed", e);
         }
     }
 
@@ -545,7 +543,8 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
     }
 
     private void stopPlaying() {
-        mPlayer.stop();
+        if (mPlayer.isPlaying()) mPlayer.stop();
+        mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
     }
@@ -554,9 +553,9 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
         playSound();
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
         try {
             mRecorder.prepare();
