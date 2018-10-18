@@ -742,9 +742,9 @@ public class ReportActivity extends BaseActivity implements GoogleApiClient.Conn
         int client_id = 0;
         int place_id = 0;
         try {
-            type_id = mTypes.getJSONObject(type.getSelectedItemPosition()).getInt("id");
-            client_id = mClients.getJSONObject(client.getSelectedItemPosition()).getInt("id");
-            place_id = mPlaces.getJSONObject(place.getSelectedItemPosition()).getInt("id");
+            type_id = mTypes.getJSONObject(type.getSelectedItemPosition() - 1).getInt("id");
+            client_id = mClients.getJSONObject(client.getSelectedItemPosition() - 1).getInt("id");
+            place_id = mPlaces.getJSONObject(place.getSelectedItemPosition() - 1).getInt("id");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -799,6 +799,7 @@ public class ReportActivity extends BaseActivity implements GoogleApiClient.Conn
 
                 @Override
                 public void onError(UploadInfo uploadInfo, Exception exception) {
+                    Log.e("tales5", "error:", exception);
                     Intent data = new Intent();
                     data.putExtra("response", "");
                     data.putExtra("status", 0);
@@ -808,6 +809,8 @@ public class ReportActivity extends BaseActivity implements GoogleApiClient.Conn
 
                 @Override
                 public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
+                    Log.e("tales5", "response: " + new String(serverResponse.getBody()));
+                    Log.e("tales5", "status: " + serverResponse.getHttpCode());
                     Intent data = new Intent();
                     data.putExtra("response", new String(serverResponse.getBody()));
                     data.putExtra("status", serverResponse.getHttpCode());
@@ -840,7 +843,6 @@ public class ReportActivity extends BaseActivity implements GoogleApiClient.Conn
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override

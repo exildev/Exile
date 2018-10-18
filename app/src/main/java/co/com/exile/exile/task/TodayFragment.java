@@ -302,7 +302,7 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
                             Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
                             try {
                                 JSONObject multimedia = new JSONObject(serverResponse.getBodyAsString());
-                                String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
+                                String url = getUrl("media/" + multimedia.getString("archivo"));
                                 file.remove("isLoading");
                                 file.put("url", url);
                                 file.put("id", multimedia.getInt("id"));
@@ -400,7 +400,7 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
                             Log.i("send", serverResponse.getHttpCode() + " " + serverResponse.getBodyAsString());
                             try {
                                 JSONObject multimedia = new JSONObject(serverResponse.getBodyAsString());
-                                String url = getString(R.string.url, "/media/" + multimedia.getString("archivo"));
+                                String url = getUrl( "media/" + multimedia.getString("archivo"));
                                 file.remove("isLoading");
                                 file.put("url", url);
                                 file.put("id", multimedia.getInt("id"));
@@ -512,11 +512,17 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
         }
         try {
             String url = multimedia.getString("url");
+            Log.e("tales5", url);
 
             mPlayer = new MediaPlayer();
             mPlayer.setDataSource(url);
             mPlayer.prepare();
-            mPlayer.start();
+            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mPlayer.start();
+                }
+            });
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
@@ -525,20 +531,6 @@ public class TodayFragment extends BaseFragment implements SubTaskListAdapter.on
                     adapter.notifyDataSetChanged();
                 }
             });
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-    }
-
-    private void startPlaying() {
-        if (mPlayer != null) {
-            stopPlaying();
-        }
-        try {
-            mPlayer = new MediaPlayer();
-            mPlayer.setDataSource(mFileName);
-            mPlayer.prepare();
-            mPlayer.start();
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }

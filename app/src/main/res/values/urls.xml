@@ -9,6 +9,7 @@
     <string name="report_url">novedades/reporte/form/</string>
     <string name="report_list_url">novedades/reporte/list/?estado=%1$s</string>
     <string name="today_task_url">operacion/notificacion/list/</string>
+    <string name="schedule_task_url">operacion/tareas/periodicas/list/?fecha_inicio=%1$s&amp;fecha_final=%2$s</string>
     <string name="subtask_complete">operacion/sub/completado/form/</string>
     <string name="subtask_uncomplete">operacion/sub/completado/delete/%1$d/</string>
     <string name="multimedia_add">operacion/multimedia/form/</string>
