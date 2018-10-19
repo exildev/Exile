@@ -28,11 +28,12 @@ import org.json.JSONException;
 import java.util.HashMap;
 import java.util.Map;
 
+import co.com.exile.exile.BaseActivity;
 import co.com.exile.exile.LoginActivity;
 import co.com.exile.exile.R;
 import co.com.exile.exile.network.VolleySingleton;
 
-public class AccountActivity extends AppCompatActivity {
+public class AccountActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class AccountActivity extends AppCompatActivity {
 
     private void logOut() {
         String serviceUrl = getString(R.string.logout);
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         StringRequest loginRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -141,7 +142,7 @@ public class AccountActivity extends AppCompatActivity {
     private void changePassword(final String actualPassword, final String newPassword, final String confirmPassword, final AlertDialog dialog, final View v) {
         String serviceUrl = getString(R.string.change_password);
 
-        String url = getString(R.string.url, serviceUrl);
+        String url = getUrl(serviceUrl);
         StringRequest loginRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

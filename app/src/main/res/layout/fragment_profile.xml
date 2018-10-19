@@ -160,17 +160,16 @@
                 android:text="@string/profile_options_subtitle" />
 
             <include
-                android:id="@+id/account_button"
-                layout="@layout/profile_adjust_account" />
+                android:id="@+id/edit_profile"
+                layout="@layout/profile_adjust_edit" />
 
             <include
-                android:id="@+id/notification_button"
-                layout="@layout/profile_adjust_notificactions"
-                android:visibility="gone" />
+                android:id="@+id/change_password"
+                layout="@layout/profile_adjust_change_password" />
 
             <include
-                android:id="@+id/help_button"
-                layout="@layout/profile_adjust_help" />
+                android:id="@+id/sign_out_button"
+                layout="@layout/profile_adjust_sign_out" />
 
         </LinearLayout>
 

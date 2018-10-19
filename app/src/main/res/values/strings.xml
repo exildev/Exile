@@ -224,4 +224,8 @@
     </string>
 
     <string name="title_activity_url">UrlActivity</string>
+    <string name="edit_profile_title">Editar perfil</string>
+    <string name="name_title">Nombre</string>
+    <string name="last_name_title">Apellidos</string>
+    <string name="email_title">Email</string>
 </resources>

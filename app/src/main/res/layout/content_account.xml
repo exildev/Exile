@@ -21,7 +21,8 @@
             android:clickable="true"
             android:onClick="changePassword"
             android:padding="16dp"
-            android:text="@string/change_password_title" />
+            android:text="@string/change_password_title"
+            android:focusable="true" />
 
         <View
             android:layout_width="match_parent"

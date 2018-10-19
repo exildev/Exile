@@ -6,8 +6,7 @@
     android:layout_height="50dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
-    android:orientation="horizontal"
-    tools:showIn="@layout/fragment_profile">
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="50dp"
@@ -20,7 +19,7 @@
             android:contentDescription="@null"
             android:scaleType="centerInside"
             android:tint="?attr/colorPrimary"
-            app:srcCompat="@drawable/ic_notifications_black_24dp" />
+            app:srcCompat="@drawable/ic_exit_to_app_24dp" />
     </FrameLayout>
 
     <TextView
@@ -33,7 +32,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="50dp"
         android:gravity="center_vertical"
-        android:text="@string/notifications_title" />
+        android:text="@string/log_out_title" />
 
     <View
         android:layout_width="match_parent"

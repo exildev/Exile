@@ -16,6 +16,7 @@
     <string name="multimedia_delete">operacion/multimedia/delete/list/</string>
     <string name="profile_data">usuarios/is/login/</string>
     <string name="change_password">usuarios/change/password/</string>
+    <string name="edit_profile">usuarios/perfil/form/%1$d/</string>
     <string name="report_fotos">novedades/foto/list/?reporte=%1$d</string>
 
     <string name="boolean_param_true">True</string>
