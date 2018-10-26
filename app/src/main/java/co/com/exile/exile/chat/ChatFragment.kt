@@ -1,5 +1,6 @@
 package co.com.exile.exile.chat
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -61,6 +62,9 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
     }
 
     override fun onClick(room: JSONObject) {
-
+        val intent = Intent(this.context, ChatActivity::class.java).apply {
+            putExtra("room", room.toString())
+        }
+        startActivity(intent)
     }
 }
