@@ -88,11 +88,15 @@
             android:name=".report.ReportDetailsActivity"
             android:label="@string/title_activity_report_details"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".UrlActivity"
             android:label="@string/title_activity_url"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".SocketService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.util.List;
@@ -34,7 +35,8 @@ public class VolleySingleton {
 
     private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            cookieManager = new CookieManager();
+            SiCookieStore2 cookieStore2 = new SiCookieStore2(mCtx);
+            cookieManager = new CookieManager(cookieStore2, CookiePolicy.ACCEPT_ALL);
             CookieHandler.setDefault(cookieManager);
 
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());

@@ -39,8 +39,6 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         try {
             JSONObject item = tasks.getJSONObject(position);
 
-            Log.e("tales5", item.getString("fecha"));
-
             SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
             SimpleDateFormat formatter = new SimpleDateFormat("MMM dd", Locale.getDefault());
             Date date = parser.parse(item.getString("fecha"));

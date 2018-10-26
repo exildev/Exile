@@ -135,9 +135,10 @@ public class MainActivity extends AppCompatActivity {
         bottomBar = findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabSelectListener);
 
-        BottomBarTab nearby = bottomBar.getTabWithId(R.id.navigation_chat);
-        nearby.setBadgeCount(5);
+        BottomBarTab chatTab = bottomBar.getTabWithId(R.id.navigation_chat);
+        chatTab.setBadgeCount(5);
 
+        startService(new Intent(this, SocketService.class));
     }
 
     @Override

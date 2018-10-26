@@ -18,6 +18,7 @@
     <string name="change_password">usuarios/change/password/</string>
     <string name="edit_profile">usuarios/perfil/form/%1$d/</string>
     <string name="report_fotos">novedades/foto/list/?reporte=%1$d</string>
+    <string name="socket_url">chat/stream/</string>
 
     <string name="boolean_param_true">True</string>
     <string name="boolean_param_false">False</string>

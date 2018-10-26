@@ -1,43 +1,14 @@
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context="co.com.exile.exile.chat.ChatFragment">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rooms_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="8dp">
-
-        <include
-            android:id="@+id/chat1"
-            layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-        <include layout="@layout/chat" />
-
-
-    </LinearLayout>
-
-</android.support.v4.widget.NestedScrollView>
+        android:layout_height="match_parent"
+        android:background="@color/background" />
+</android.support.v4.widget.SwipeRefreshLayout>
