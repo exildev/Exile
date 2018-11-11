@@ -14,7 +14,7 @@ class ChatActivity : BaseActivity() {
 
     private lateinit var room: JSONObject
     private val adapter = MessageListAdapter()
-    private lateinit var messages: JSONArray
+    private lateinit var messages: MutableList<JSONObject>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,12 @@ class ChatActivity : BaseActivity() {
         Log.e("room", room.toString())
         val firstName = room.getJSONArray("miembros").getJSONObject(0).getString("nombre")
         val lastName = room.getJSONArray("miembros").getJSONObject(0).getString("apellidos")
-        messages = room.getJSONArray("mensajes")
+        val messages = room.getJSONArray("mensajes")
+
+        this.messages = mutableListOf()
+        for (i in 0 until messages.length()) {
+            this.messages.add(i, messages.getJSONObject(i))
+        }
 
         toolbar.title = "$firstName $lastName"
         setSupportActionBar(toolbar)
@@ -37,7 +42,7 @@ class ChatActivity : BaseActivity() {
         messagesList.adapter = adapter
 
         adapter.setMe(room.getString("me"))
-        adapter.setMessages(messages)
+        adapter.setMessages(this.messages)
         messagesList.scrollToPosition(messages.length() - 1)
 
         fab.setOnClickListener {
@@ -58,9 +63,9 @@ class ChatActivity : BaseActivity() {
 
     override fun onMessage(message: JSONObject) {
         if (room.getString("id") == message.getString("room")) {
-            messages.put(message)
-            adapter.notifyItemInserted(messages.length())
-            messagesList.scrollToPosition(messages.length() - 1)
+            messages.add(message)
+            adapter.notifyDataSetChanged()
+            messagesList.scrollToPosition(messages.size - 1)
         } else {
             super.onMessage(message)
         }
