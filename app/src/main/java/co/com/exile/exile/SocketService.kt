@@ -20,12 +20,10 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
-
 class SocketService : Service() {
 
     private var client: OkHttpClient? = null
     private var webSocket: WebSocket? = null
-
 
     private val url: String?
         get() {
@@ -37,6 +35,7 @@ class SocketService : Service() {
 
         override fun onReceive(context: Context, intent: Intent) {
             val command = intent.getStringExtra("command")
+            Log.e("talescommand", command)
             webSocket?.send(command)
         }
     }
@@ -60,7 +59,7 @@ class SocketService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        webSocket!!.close(NORMAL_CLOSURE_STATUS, "Goodbye !")
+        webSocket?.close(NORMAL_CLOSURE_STATUS, "Goodbye !")
     }
 
     private fun start() {
@@ -77,6 +76,7 @@ class SocketService : Service() {
         }
 
         override fun onMessage(webSocket: WebSocket?, text: String?) {
+            Log.e("talescommand", text)
             sendCommandResponse(text)
         }
 

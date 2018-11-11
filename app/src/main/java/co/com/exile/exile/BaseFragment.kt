@@ -19,6 +19,7 @@ open class BaseFragment : Fragment() {
 
         override fun onReceive(context: Context, intent: Intent) {
             val responseString = intent.getStringExtra("response")
+            Log.e("tales234", responseString)
             try {
                 val response = JSONObject(responseString)
                 if (response.getString("type") == "friends") {
@@ -43,12 +44,14 @@ open class BaseFragment : Fragment() {
         }
 
         Log.e("tales5", "url: " + url!!)
-    }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
         val intentFilter = IntentFilter(ACTION_STRING_ACTIVITY)
         context.registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context.unregisterReceiver(receiver)
     }
 
     private fun getURL(): String? {

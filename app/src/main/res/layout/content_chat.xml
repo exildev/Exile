@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/messagesList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="52dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="co.com.exile.exile.chat.ChatActivity"
-    tools:showIn="@layout/activity_chat">
-
-    <LinearLayout
-        android:id="@+id/messages_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/chat_message_me_audio" />
-
-        <include
-            android:id="@+id/message_you_top"
-            layout="@layout/chat_message_you_top" />
-
-        <include layout="@layout/chat_message_you_center" />
-
-        <include layout="@layout/chat_message_you_bottom" />
-
-        <include layout="@layout/chat_message_me_gif" />
-
-        <include layout="@layout/chat_message_me_top" />
-
-        <include layout="@layout/chat_message_me_center" />
-
-        <include layout="@layout/chat_message_me_bottom" />
-
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+    tools:showIn="@layout/activity_chat"/>

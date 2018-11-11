@@ -40,6 +40,7 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         try {
             val room = rooms?.getJSONObject(position)
+            Log.e("talesroom", room.toString())
             val me = room?.getString("me")
             val member = room?.getJSONArray("miembros")?.getJSONObject(0)
             val user =  "${member?.getString("nombre")} ${member?.getString("apellidos")}"

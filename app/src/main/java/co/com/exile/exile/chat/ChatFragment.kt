@@ -30,12 +30,12 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val reportList = view.findViewById<RecyclerView>(R.id.rooms_list)
+        val roomList = view.findViewById<RecyclerView>(R.id.rooms_list)
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        reportList.layoutManager = layoutManager
-        reportList.setHasFixedSize(true)
-        reportList.adapter = adapter
+        roomList.layoutManager = layoutManager
+        roomList.setHasFixedSize(true)
+        roomList.adapter = adapter
 
         adapter.setListener(this)
 
