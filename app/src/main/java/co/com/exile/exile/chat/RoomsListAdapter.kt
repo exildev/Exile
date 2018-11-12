@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -19,7 +18,7 @@ import co.com.exile.exile.ext.java.util.toChatDateFormat
 
 internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportViewHolder>() {
 
-    private var rooms: JSONArray? = null
+    private var rooms = mutableListOf<JSONObject>()
     private var reportClickListener: OnRoomClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
@@ -28,7 +27,7 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
         return ReportViewHolder(view)
     }
 
-    fun setRooms(rooms: JSONArray) {
+    fun setRooms(rooms: MutableList<JSONObject>) {
         this.rooms = rooms
         notifyDataSetChanged()
     }
@@ -39,14 +38,14 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         try {
-            val room = rooms?.getJSONObject(position)
+            val room = rooms[position]
             Log.e("talesroom", room.toString())
-            val me = room?.getString("me")
-            val member = room?.getJSONArray("miembros")?.getJSONObject(0)
+            val me = room.getString("me")
+            val member = room.getJSONArray("miembros")?.getJSONObject(0)
             val user =  "${member?.getString("nombre")} ${member?.getString("apellidos")}"
             val messages = mutableListOf<JSONObject>()
 
-            room?.getJSONArray("mensajes")?.let {
+            room.getJSONArray("mensajes")?.let {
                 for (i in 0 until it.length()) {
                     messages.add(it.getJSONObject(i))
                 }
@@ -71,7 +70,7 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
     }
 
     override fun getItemCount(): Int {
-        return rooms?.length() ?: 0
+        return rooms.size
     }
 
     internal interface OnRoomClickListener {
@@ -92,13 +91,10 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
 
         override fun onClick(view: View) {
             try {
-                rooms?.let {
-                    reportClickListener?.onClick(it.getJSONObject(adapterPosition))
-                }
+                reportClickListener?.onClick(rooms[adapterPosition])
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
-
         }
     }
 }

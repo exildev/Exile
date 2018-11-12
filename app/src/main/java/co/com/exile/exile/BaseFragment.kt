@@ -26,6 +26,8 @@ open class BaseFragment : Fragment() {
                     onFriendsResponse(response)
                 } else if (response.getString("type") == "rooms") {
                     onChatsResponse(response)
+                } else if (response.getString("type") == "room_delete") {
+                    onRoomDeleted(response)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -43,7 +45,7 @@ open class BaseFragment : Fragment() {
             url = getURL()
         }
 
-        Log.e("tales5", "url: " + url!!)
+        Log.e("tales5", "url: $url" )
 
         val intentFilter = IntentFilter(ACTION_STRING_ACTIVITY)
         context.registerReceiver(receiver, intentFilter)
@@ -89,6 +91,17 @@ open class BaseFragment : Fragment() {
 
     }
 
+    protected fun deleteChat(roomId: String) {
+        try {
+            sendCommandToService(JSONObject().apply {
+                put("command", "delete_room")
+                put("room", roomId)
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     protected fun requestNotifications() {
         try {
             sendCommandToService(JSONObject().put("command", "notification"))
@@ -105,6 +118,8 @@ open class BaseFragment : Fragment() {
     protected open fun onChatsResponse(response: JSONObject) {
         //TODO: implementar funcionalidad por defecto
     }
+
+    protected open fun onRoomDeleted(response: JSONObject) = Unit
 
     private fun sendCommandToService(command: JSONObject) {
         val intent = Intent()

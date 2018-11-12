@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +51,7 @@ public class AccountActivity extends BaseActivity {
 
     public void logOut(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Esta seguro que quiere cerrar la sesion")
+        builder.setMessage("¿Esta seguro que quiere cerrar la sesion?")
                 .setCancelable(false)
                 .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
