@@ -55,6 +55,11 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
         requestChats()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requestChats()
+    }
+
     override fun onFriendsResponse(response: JSONObject) {
         val intent = Intent(this.context, ChatFriendActivity::class.java).apply {
             putExtra("friends", response.getJSONArray("friends").toString())
@@ -82,10 +87,6 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
         val index = rooms.indexOfFirst { it.getString("id") == response.getString("room") }
         rooms.removeAt(index)
         adapter.notifyItemRemoved(index)
-
-        //TODO: refrescar en caso de que sea necesario
-        //requestChats()
-        //swipe.isRefreshing = true
     }
 
     override fun onClick(room: JSONObject) {

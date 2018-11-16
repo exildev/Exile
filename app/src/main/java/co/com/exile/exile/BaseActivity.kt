@@ -24,6 +24,8 @@ open class BaseActivity : AppCompatActivity() {
                 val response = JSONObject(responseString)
                 if (response.getString("type") == "message") {
                     onMessage(response.getJSONObject("mensaje"))
+                } else if (response.getString("type") == "create_room_success") {
+                    onRoomCreated(response.getJSONObject("room"))
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -33,6 +35,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected open fun onMessage(message: JSONObject) = Unit
+
+    protected open fun onRoomCreated(message: JSONObject) = Unit
 
     override fun onResume() {
         super.onResume()
@@ -47,6 +51,11 @@ open class BaseActivity : AppCompatActivity() {
 
         val intentFilter = IntentFilter(ACTION_STRING_ACTIVITY)
         registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {

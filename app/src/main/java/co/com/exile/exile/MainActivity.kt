@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_report -> showViewPager(R.id.navigation_report)
             R.id.navigation_chat -> showFragment(R.id.navigation_chat)
             R.id.navigation_profile -> {
-                actionBar.hide()
+                supportActionBar?.hide()
                 showFragment(R.id.navigation_profile)
             }
         }

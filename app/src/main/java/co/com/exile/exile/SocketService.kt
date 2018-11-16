@@ -76,7 +76,7 @@ class SocketService : Service() {
         }
 
         override fun onMessage(webSocket: WebSocket?, text: String?) {
-            Log.e("talescommand", text)
+            Log.e("talesreceive", text)
             sendCommandResponse(text)
         }
 

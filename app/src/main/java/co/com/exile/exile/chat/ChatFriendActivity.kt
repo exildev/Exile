@@ -1,5 +1,6 @@
 package co.com.exile.exile.chat
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -71,7 +72,11 @@ class ChatFriendActivity : BaseActivity(), FriendListAdapter.OnFriendClickListen
     }
 
     override fun onClick(friend: JSONObject) {
-        //TODO: abrir chat
+        val intent = Intent(this, ChatActivity::class.java).apply {
+            putExtra("friend", friend.toString())
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun filter(search: String) {
