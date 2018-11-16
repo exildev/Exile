@@ -16,6 +16,7 @@ import org.json.JSONObject
 
 import co.com.exile.exile.BaseFragment
 import co.com.exile.exile.R
+import co.com.exile.exile.chat.adapter.RoomsListAdapter
 import kotlinx.android.synthetic.main.fragment_chat.*
 
 class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
@@ -55,7 +56,10 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
     }
 
     override fun onFriendsResponse(response: JSONObject) {
-        Log.e("taleschat", response.toString())
+        val intent = Intent(this.context, ChatFriendActivity::class.java).apply {
+            putExtra("friends", response.getJSONArray("friends").toString())
+        }
+        startActivity(intent)
     }
 
     override fun onChatsResponse(response: JSONObject) {
@@ -102,5 +106,9 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
 
     private fun deleteRoom(position: Int) {
         deleteChat(rooms[position].getString("id"))
+    }
+
+    fun addChat() {
+        requestFriends()
     }
 }

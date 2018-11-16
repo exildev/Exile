@@ -14,7 +14,7 @@ import org.json.JSONObject
 
 open class BaseActivity : AppCompatActivity() {
 
-    private var url: String? = null
+    protected var url: String? = null
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

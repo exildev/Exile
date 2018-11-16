@@ -19,7 +19,6 @@ open class BaseFragment : Fragment() {
 
         override fun onReceive(context: Context, intent: Intent) {
             val responseString = intent.getStringExtra("response")
-            Log.e("tales234", responseString)
             try {
                 val response = JSONObject(responseString)
                 if (response.getString("type") == "friends") {
@@ -111,13 +110,9 @@ open class BaseFragment : Fragment() {
 
     }
 
-    protected open fun onFriendsResponse(response: JSONObject) {
-        //TODO: implementar funcionalidad por defecto
-    }
+    protected open fun onFriendsResponse(response: JSONObject) = Unit
 
-    protected open fun onChatsResponse(response: JSONObject) {
-        //TODO: implementar funcionalidad por defecto
-    }
+    protected open fun onChatsResponse(response: JSONObject) = Unit
 
     protected open fun onRoomDeleted(response: JSONObject) = Unit
 

@@ -1,4 +1,4 @@
-package co.com.exile.exile.chat
+package co.com.exile.exile.chat.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity

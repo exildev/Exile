@@ -96,7 +96,12 @@
         <service
             android:name=".SocketService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity
+            android:name=".chat.ChatFriendActivity"
+            android:label="@string/title_activity_chat_friend"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

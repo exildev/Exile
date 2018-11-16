@@ -228,4 +228,6 @@
     <string name="name_title">Nombre</string>
     <string name="last_name_title">Apellidos</string>
     <string name="email_title">Email</string>
+    <string name="title_activity_chat_friend">Contactos</string>
+    <string name="search_title">Buscar</string>
 </resources>

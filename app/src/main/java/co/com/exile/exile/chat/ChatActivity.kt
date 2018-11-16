@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import co.com.exile.exile.BaseActivity
 import co.com.exile.exile.R
+import co.com.exile.exile.chat.adapter.MessageListAdapter
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.content_chat.*
 import org.json.JSONArray
