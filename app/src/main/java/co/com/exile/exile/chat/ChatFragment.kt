@@ -25,7 +25,7 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
     private var adapter = RoomsListAdapter()
     private  var rooms: MutableList<JSONObject> = mutableListOf()
     private lateinit var friends: MutableList<JSONObject>
-    private var notifications: MutableList<JSONObject> = mutableListOf()
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflater?.inflate(R.layout.fragment_chat, container, false)

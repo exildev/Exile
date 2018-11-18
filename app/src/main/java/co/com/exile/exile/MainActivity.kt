@@ -121,9 +121,6 @@ class MainActivity : AppCompatActivity() {
         bottomBar = findViewById(R.id.bottomBar)
         bottomBar?.setOnTabSelectListener(tabSelectListener)
 
-        val chatTab = bottomBar?.getTabWithId(R.id.navigation_chat)
-        chatTab?.setBadgeCount(5)
-
         startService(Intent(this, SocketService::class.java))
     }
 
@@ -166,6 +163,11 @@ class MainActivity : AppCompatActivity() {
             val item = menu?.findItem(id)
             item?.isVisible = true
         }
+    }
+
+    fun setNotificationNumber(number: Int) {
+        val chatTab = bottomBar?.getTabWithId(R.id.navigation_chat)
+        chatTab?.setBadgeCount(number)
     }
 
     @Shortcut(id = "show_reports", icon = R.drawable.ic_report_24dp, shortLabel = "Reportes", backStack = [LoginActivity::class])

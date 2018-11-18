@@ -17,6 +17,8 @@ open class BaseFragment : Fragment() {
 
     protected var url: String? = null
 
+    protected var notifications: MutableList<JSONObject> = mutableListOf()
+
     private val receiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
@@ -139,11 +141,20 @@ open class BaseFragment : Fragment() {
     }
 
     protected open fun onNotification(notification: JSONObject) {
-        //TODO: put the notifications logic
+        notifications.add(notification)
+        val activity = activity as? MainActivity
+        activity?.setNotificationNumber(this.notifications.size)
     }
 
     protected open fun onNotificationList(notifications: JSONArray) {
-        //TODO: agregar notificaciones al bottom bar
+        this.notifications = mutableListOf()
+        for (i in 0 until notifications.length()){
+            Log.e("tales4", "noti ${notifications.getJSONObject(i)}")
+            this.notifications.add(i, notifications.getJSONObject(i))
+        }
+
+        val activity = activity as? MainActivity
+        activity?.setNotificationNumber(this.notifications.size)
     }
 
     private fun sendCommandToService(command: JSONObject) {
