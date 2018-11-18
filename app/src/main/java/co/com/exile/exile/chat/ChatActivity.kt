@@ -34,6 +34,8 @@ class ChatActivity : BaseActivity() {
                 val lastName = it.getJSONArray("miembros")?.getJSONObject(0)?.getString("apellidos")
                 val messages = it.getJSONArray("mensajes")
 
+                readNotifications(it.getJSONArray("notifications"))
+
                 for (i in 0 until (messages?.length() ?: 0)) {
                     this.messages.add(i, messages.getJSONObject(i))
                 }
@@ -67,6 +69,19 @@ class ChatActivity : BaseActivity() {
         }
     }
 
+    private fun readNotifications(notifications: JSONArray) {
+        val notificationIds = mutableListOf<String>()
+        for (i in 0 until notifications.length()) {
+            notificationIds.add(notifications.getJSONObject(i).getString("id"))
+        }
+
+        sendCommandToService(JSONObject().apply {
+            put("command", "notificacion_read")
+            put("notifications", JSONArray(notificationIds))
+            put("type", 2)
+        })
+    }
+
     private fun sendMessage() {
         val message = JSONObject().apply {
             put("command", "send")
@@ -92,8 +107,17 @@ class ChatActivity : BaseActivity() {
             messages.add(message)
             adapter.notifyDataSetChanged()
             messagesList.scrollToPosition(messages.size - 1)
+            readMessage(message)
         } else {
             super.onMessage(message)
+        }
+    }
+
+    override fun onNotification(notification: JSONObject) {
+        if (room?.getString("id") == notification.getString("room")) {
+            readNotifications(JSONArray().put(notification))
+        } else {
+            super.onNotification(notification)
         }
     }
 

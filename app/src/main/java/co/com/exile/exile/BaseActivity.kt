@@ -26,6 +26,7 @@ open class BaseActivity : AppCompatActivity() {
                     "message" -> onMessage(response.getJSONObject("mensaje"))
                     "create_room_success" -> onRoomCreated(response.getJSONObject("room"))
                     "can_join_room" -> joinRoom(response.getJSONObject("room"))
+                    "notification__room" -> onNotification(response)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -33,8 +34,13 @@ open class BaseActivity : AppCompatActivity() {
 
         }
     }
+    protected open fun onMessage(message: JSONObject) {
+        readMessage(message)
+    }
 
-    protected open fun onMessage(message: JSONObject) = Unit
+    protected open fun onNotification(notification: JSONObject) {
+        //TODO: put the notifications logic
+    }
 
     protected open fun onRoomCreated(message: JSONObject) = Unit
 
@@ -43,6 +49,13 @@ open class BaseActivity : AppCompatActivity() {
         sendCommandToService(JSONObject().apply {
             put("command", "join_room")
             put("room", room.getString("id"))
+        })
+    }
+
+    protected fun readMessage(message: JSONObject){
+        sendCommandToService(JSONObject().apply {
+            put("command", "message_received")
+            put("messageId", message.getString("messageId"))
         })
     }
 

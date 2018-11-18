@@ -122,7 +122,13 @@ open class BaseFragment : Fragment() {
 
     protected open fun onRoomDeleted(response: JSONObject) = Unit
 
-    protected open fun onMessage(message: JSONObject) = Unit
+    @CallSuper
+    protected open fun onMessage(message: JSONObject) {
+        sendCommandToService(JSONObject().apply {
+            put("command", "message_received")
+            put("messageId", message.getString("messageId"))
+        })
+    }
 
     @CallSuper
     protected open fun joinRoom(room: JSONObject) {

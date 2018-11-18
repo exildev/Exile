@@ -23,9 +23,9 @@ import org.json.JSONArray
 class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
 
     private var adapter = RoomsListAdapter()
-    private lateinit var rooms: MutableList<JSONObject>
+    private  var rooms: MutableList<JSONObject> = mutableListOf()
     private lateinit var friends: MutableList<JSONObject>
-    private lateinit var notifications: MutableList<JSONObject>
+    private var notifications: MutableList<JSONObject> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflater?.inflate(R.layout.fragment_chat, container, false)
@@ -38,8 +38,6 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
         roomList.layoutManager = layoutManager
         roomList.setHasFixedSize(true)
         roomList.adapter = adapter
-
-        notifications = mutableListOf()
 
         adapter.setListener(this)
 
@@ -95,6 +93,7 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
     }
 
     override fun onMessage(message: JSONObject) {
+        super.onMessage(message)
         rooms.firstOrNull { it.getString("id") == message.getString("room") }?.let {
             it.getJSONArray("mensajes").put(message)
             adapter.notifyDataSetChanged()
