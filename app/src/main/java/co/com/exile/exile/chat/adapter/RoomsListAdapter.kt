@@ -2,24 +2,22 @@ package co.com.exile.exile.chat.adapter
 
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-
-import org.json.JSONException
-import org.json.JSONObject
-
 import co.com.exile.exile.R
 import co.com.exile.exile.ext.java.util.toChatDate
 import co.com.exile.exile.ext.java.util.toChatDateFormat
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.chat.view.*
+import org.json.JSONException
+import org.json.JSONObject
 
 internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportViewHolder>() {
 
     private var rooms = mutableListOf<JSONObject>()
     private var reportClickListener: OnRoomClickListener? = null
+    private var url: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,6 +30,11 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
         notifyDataSetChanged()
     }
 
+    fun setUrl(url: String) {
+        this.url = url
+        notifyDataSetChanged()
+    }
+
     fun setListener(reportClickListener: OnRoomClickListener) {
         this.reportClickListener = reportClickListener
     }
@@ -39,7 +42,6 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         try {
             val room = rooms[position]
-            Log.e("talesroom", room.toString())
             val me = room.getString("me")
             val member = room.getJSONArray("miembros")?.getJSONObject(0)
             val user =  "${member?.getString("nombre")} ${member?.getString("apellidos")}"
@@ -51,17 +53,27 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
                 }
             }
 
-            val lastMessage = messages.firstOrNull { it.getJSONObject("emisor").getString("id") != me }
-            val unreadNumber = messages.filter { it.getJSONObject("emisor").getString("id") != me && !it.getBoolean("leido")}
-            Log.e("tales pascuales", lastMessage?.getString("created_at")?.toChatDate().toString())
+            val lastMessage = messages.lastOrNull()
+            val unreadNumber = try {
+                room.getJSONArray("notifications").length()
+            } catch (e: Exception) {
+                0
+            }
             val dateLast = lastMessage?.getString("created_at")?.toChatDate()?.toChatDateFormat()
+            val url =  "${this.url}${member?.getString("avatar")}"
 
-            holder.apply {
+            holder.itemView.apply {
                 this.user.text = user
-                this.lastMessage.text = lastMessage?.getString("mensaje")
-                this.unreadNumber.visibility = if (unreadNumber.isEmpty()) View.GONE else View.VISIBLE
-                this.unreadNumber.text = "${unreadNumber.size}"
-                this.dateLast.text = dateLast
+                this.last_message.text = lastMessage?.getString("mensaje")
+                this.unread_number.visibility = if (unreadNumber < 1) View.GONE else View.VISIBLE
+                this.unread_bg.visibility = if (unreadNumber < 1) View.GONE else View.VISIBLE
+                this.unread_number.text = "$unreadNumber"
+                this.date_last.text = dateLast
+
+                Picasso.with(context)
+                        .load(url)
+                        .placeholder(R.drawable.default_avatar)
+                        .into(avatar)
             }
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -78,12 +90,6 @@ internal class RoomsListAdapter : RecyclerView.Adapter<RoomsListAdapter.ReportVi
     }
 
     internal inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-
-        var user: TextView = itemView.findViewById(R.id.user)
-        var lastMessage: TextView = itemView.findViewById(R.id.last_message)
-        var unreadNumber: TextView = itemView.findViewById(R.id.unread_number)
-        var dateLast: TextView = itemView.findViewById(R.id.date_last)
-        var avatar: ImageView = itemView.findViewById(R.id.avatar)
 
         init {
             itemView.setOnClickListener(this)

@@ -1,5 +1,6 @@
 package co.com.exile.exile.chat.adapter
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -47,12 +48,12 @@ internal class MessageListAdapter : RecyclerView.Adapter<MessageListAdapter.Mess
                     avatar.visibility = View.GONE
                     message_me_constraint.visibility = View.VISIBLE
                     message_you_constraint.visibility = View.GONE
-
+                    this.message.setTextColor(Color.WHITE)
                 }
             } else {
                 holder.itemView.apply {
                     (messageBg.layoutParams as? FrameLayout.LayoutParams)?.gravity = Gravity.START
-
+                    this.message.setTextColor(Color.BLACK)
                     message_me_constraint.visibility = View.GONE
                     message_you_constraint.visibility = View.VISIBLE
                 }

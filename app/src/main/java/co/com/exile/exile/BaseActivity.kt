@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import org.json.JSONException
@@ -19,13 +20,12 @@ open class BaseActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val responseString = intent.getStringExtra("response")
-            Log.e("tales23", responseString)
             try {
                 val response = JSONObject(responseString)
-                if (response.getString("type") == "message") {
-                    onMessage(response.getJSONObject("mensaje"))
-                } else if (response.getString("type") == "create_room_success") {
-                    onRoomCreated(response.getJSONObject("room"))
+                when (response.getString("type")) {
+                    "message" -> onMessage(response.getJSONObject("mensaje"))
+                    "create_room_success" -> onRoomCreated(response.getJSONObject("room"))
+                    "can_join_room" -> joinRoom(response.getJSONObject("room"))
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -37,6 +37,14 @@ open class BaseActivity : AppCompatActivity() {
     protected open fun onMessage(message: JSONObject) = Unit
 
     protected open fun onRoomCreated(message: JSONObject) = Unit
+
+    @CallSuper
+    protected open fun joinRoom(room: JSONObject) {
+        sendCommandToService(JSONObject().apply {
+            put("command", "join_room")
+            put("room", room.getString("id"))
+        })
+    }
 
     override fun onResume() {
         super.onResume()

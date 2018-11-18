@@ -48,8 +48,6 @@ internal class FriendListAdapter : RecyclerView.Adapter<FriendListAdapter.Report
 
             val url =  "${this.url}${friend.getString("avatar")}"
 
-            Log.e("tales", "url: $url")
-
             holder.itemView.apply {
                 this.user.text = user
                 Picasso.with(context)
@@ -72,8 +70,6 @@ internal class FriendListAdapter : RecyclerView.Adapter<FriendListAdapter.Report
     }
 
     internal inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-
-
 
         init {
             itemView.apply {

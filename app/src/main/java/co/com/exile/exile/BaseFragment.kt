@@ -5,15 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.util.Log
+import org.json.JSONArray
 
 import org.json.JSONException
 import org.json.JSONObject
 
 open class BaseFragment : Fragment() {
 
-    private var url: String? = null
+    protected var url: String? = null
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -21,12 +23,14 @@ open class BaseFragment : Fragment() {
             val responseString = intent.getStringExtra("response")
             try {
                 val response = JSONObject(responseString)
-                if (response.getString("type") == "friends") {
-                    onFriendsResponse(response)
-                } else if (response.getString("type") == "rooms") {
-                    onChatsResponse(response)
-                } else if (response.getString("type") == "room_delete") {
-                    onRoomDeleted(response)
+                when (response.getString("type")) {
+                    "friends" -> onFriendsResponse(response)
+                    "rooms" -> onChatsResponse(response)
+                    "room_delete" -> onRoomDeleted(response)
+                    "message" -> onMessage(response.getJSONObject("mensaje"))
+                    "can_join_room" -> joinRoom(response.getJSONObject("room"))
+                    "notification__room" -> onNotification(response)
+                    "notification" -> onNotificationList(response.getJSONArray("notifications_room"))
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -48,6 +52,8 @@ open class BaseFragment : Fragment() {
 
         val intentFilter = IntentFilter(ACTION_STRING_ACTIVITY)
         context.registerReceiver(receiver, intentFilter)
+
+        requestNotifications()
     }
 
     override fun onPause() {
@@ -115,6 +121,24 @@ open class BaseFragment : Fragment() {
     protected open fun onChatsResponse(response: JSONObject) = Unit
 
     protected open fun onRoomDeleted(response: JSONObject) = Unit
+
+    protected open fun onMessage(message: JSONObject) = Unit
+
+    @CallSuper
+    protected open fun joinRoom(room: JSONObject) {
+        sendCommandToService(JSONObject().apply {
+            put("command", "join_room")
+            put("room", room.getString("id"))
+        })
+    }
+
+    protected open fun onNotification(notification: JSONObject) {
+        //TODO: put the notifications logic
+    }
+
+    protected open fun onNotificationList(notifications: JSONArray) {
+        //TODO: agregar notificaciones al bottom bar
+    }
 
     private fun sendCommandToService(command: JSONObject) {
         val intent = Intent()

@@ -18,17 +18,17 @@ import co.com.exile.exile.BaseFragment
 import co.com.exile.exile.R
 import co.com.exile.exile.chat.adapter.RoomsListAdapter
 import kotlinx.android.synthetic.main.fragment_chat.*
+import org.json.JSONArray
 
 class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
 
     private var adapter = RoomsListAdapter()
     private lateinit var rooms: MutableList<JSONObject>
+    private lateinit var friends: MutableList<JSONObject>
+    private lateinit var notifications: MutableList<JSONObject>
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater?.inflate(R.layout.fragment_chat, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) =
+            inflater?.inflate(R.layout.fragment_chat, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,6 +38,8 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
         roomList.layoutManager = layoutManager
         roomList.setHasFixedSize(true)
         roomList.adapter = adapter
+
+        notifications = mutableListOf()
 
         adapter.setListener(this)
 
@@ -53,27 +55,30 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
         swipe.setOnRefreshListener { requestChats() }
 
         requestChats()
+        requestFriends()
     }
 
     override fun onResume() {
         super.onResume()
         requestChats()
+        requestFriends()
+        url?.let { adapter.setUrl(it) }
     }
 
     override fun onFriendsResponse(response: JSONObject) {
-        val intent = Intent(this.context, ChatFriendActivity::class.java).apply {
-            putExtra("friends", response.getJSONArray("friends").toString())
+        this.friends = mutableListOf()
+        val friends = response.getJSONArray("friends")
+        for (i in 0 until friends.length()) {
+            this.friends.add(i, friends.getJSONObject(i))
         }
-        startActivity(intent)
     }
 
     override fun onChatsResponse(response: JSONObject) {
-        Log.e("taleschat", response.toString())
         try {
             val rooms = response.getJSONArray("rooms")
             this.rooms = mutableListOf()
             for (i in 0 until rooms.length()) {
-                this.rooms.add(i, rooms.getJSONObject(i))
+                this.rooms.add(i, rooms.getJSONObject(i).apply { put("notifications", JSONArray(notifications.filter { it.getString("room") == this.getString("id") })) })
             }
             adapter.setRooms(this.rooms)
             swipe.isRefreshing = false
@@ -87,6 +92,39 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
         val index = rooms.indexOfFirst { it.getString("id") == response.getString("room") }
         rooms.removeAt(index)
         adapter.notifyItemRemoved(index)
+    }
+
+    override fun onMessage(message: JSONObject) {
+        rooms.firstOrNull { it.getString("id") == message.getString("room") }?.let {
+            it.getJSONArray("mensajes").put(message)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun joinRoom(room: JSONObject) {
+        super.joinRoom(room)
+        rooms.add(room)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onNotification(notification: JSONObject) {
+        notifications.add(notification)
+        val room = rooms.firstOrNull { it.getString("id") == notification.getString("room")}
+        room?.put("notifications", JSONArray(notifications.filter { it.getString("room") == notification.getString("room") }))
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onNotificationList(notifications: JSONArray) {
+        this.notifications = mutableListOf()
+        for (i in 0 until notifications.length()){
+            Log.e("tales4", "noti ${notifications.getJSONObject(i)}")
+            this.notifications.add(i, notifications.getJSONObject(i))
+        }
+
+        rooms.forEach {
+            it.put("notifications", JSONArray(this.notifications.filter { it.getString("room") == it.getString("id") }))
+        }
+        adapter.notifyDataSetChanged()
     }
 
     override fun onClick(room: JSONObject) {
@@ -110,6 +148,9 @@ class ChatFragment : BaseFragment(), RoomsListAdapter.OnRoomClickListener {
     }
 
     fun addChat() {
-        requestFriends()
+        val intent = Intent(this.context, ChatFriendActivity::class.java).apply {
+            putExtra("friends", JSONArray(friends).toString())
+        }
+        startActivity(intent)
     }
 }

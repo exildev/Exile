@@ -27,7 +27,6 @@ class ChatActivity : BaseActivity() {
         this.messages = mutableListOf()
 
         intent.getStringExtra("room")?.let {roomString ->
-            Log.e("tales5", roomString)
             room = JSONObject(roomString)
 
             room?.let {
@@ -42,7 +41,6 @@ class ChatActivity : BaseActivity() {
             }
         } ?:  intent.getStringExtra("friend")?.let {friendString ->
             friend = JSONObject(friendString)
-            Log.e("tales5", friendString)
             friend?.let {
                 val firstName = it.getString("nombre")
                 val lastName = it.getString("apellidos")
