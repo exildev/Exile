@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ReportFragmetPagerAdapter.ADD_NEW_REPORT) {
             val fragment = mReportPager?.adapter?.instantiateItem(mReportPager, mReportPager?.currentItem ?: 0) as Fragment
             fragment.onActivityResult(requestCode, resultCode, data)
