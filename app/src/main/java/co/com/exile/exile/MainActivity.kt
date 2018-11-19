@@ -124,6 +124,16 @@ class MainActivity : AppCompatActivity() {
         startService(Intent(this, SocketService::class.java))
     }
 
+    override fun onStop() {
+        super.onStop()
+        startService(Intent(this, NotificationService::class.java))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        stopService(Intent(this, NotificationService::class.java))
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.main_menu, menu)
