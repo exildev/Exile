@@ -33,7 +33,7 @@
     <string name="notifications_title">Notificaciones</string>
     <string name="account_title">Cuenta</string>
     <string name="help_title">Ayuda</string>
-    <string name="schedule_title">Schedule</string>
+    <string name="schedule_title">Programados</string>
     <string name="title_activity_help">Ayuda</string>
     <string name="title_activity_account">Cuenta</string>
     <string name="title_activity_notification">Notificaciones</string>

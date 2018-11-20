@@ -22,9 +22,9 @@ public class TasksFragmetPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
-            return "Today";
+            return "Hoy";
         } else {
-            return "Schedule";
+            return "Proximos";
         }
     }
 

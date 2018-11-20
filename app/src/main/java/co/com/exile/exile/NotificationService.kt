@@ -43,6 +43,12 @@ class NotificationService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val intentFilter = IntentFilter(ACTION_STRING_ACTIVITY)
+        registerReceiver(receiver, intentFilter)
+    }
+
     private fun joinRoom(room: JSONObject) {
         sendCommandToService(JSONObject().apply {
             put("command", "join_room")

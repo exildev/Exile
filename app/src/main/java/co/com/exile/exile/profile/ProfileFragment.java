@@ -490,7 +490,7 @@ public class ProfileFragment extends BaseFragment {
                             .into(profile);
 
                     avatar_form_url = response.getString("url_avatar");
-                    userId = response.getInt("userID");
+                    userId = response.getInt("id");
                     username = response.getString("username");
                 } catch (JSONException e) {
                     e.printStackTrace();
