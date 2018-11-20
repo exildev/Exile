@@ -40,6 +40,8 @@ class ChatActivity : BaseActivity() {
                     this.messages.add(i, messages.getJSONObject(i))
                 }
                 toolbar.title = "$firstName $lastName"
+
+                messagesUpdateStatus()
             }
         } ?:  intent.getStringExtra("friend")?.let {friendString ->
             friend = JSONObject(friendString)
@@ -102,15 +104,73 @@ class ChatActivity : BaseActivity() {
         message_input.setText("")
     }
 
+    private fun markAsRead(message: JSONObject) {
+        if (room?.getString("me") != message.getJSONObject("emisor").getString("id")) {
+            Log.e("tales5", "read marked")
+            sendCommandToService(JSONObject().apply {
+                put("command", "message_viewed")
+                put("messageId", message.getString("messageId"))
+            })
+        }
+    }
+
+    private fun messagesUpdateStatus() {
+        val messages = this.messages.filter { !it.getBoolean("recibido") || !it.getBoolean("leido")}.map { it.getString("messageId") }
+        Log.e("tales5", "$messages")
+        sendCommandToService(JSONObject().apply {
+            put("command", "messages_update_status")
+            put("roomId", room?.getString("id"))
+            put("viewed", true)
+            put("recived", true)
+            put("messages", JSONArray(messages))
+        })
+    }
+
     override fun onMessage(message: JSONObject) {
         if (room?.getString("id") == message.getString("room")) {
             messages.add(message)
             adapter.notifyDataSetChanged()
             messagesList.scrollToPosition(messages.size - 1)
-            readMessage(message)
+            if (room?.getString("me") != message.getJSONObject("emisor").getString("id")) {
+                readMessage(message)
+                markAsRead(message)
+            }
         } else {
             super.onMessage(message)
         }
+    }
+
+    override fun onMessageViewed(response: JSONObject) {
+        val i = messages.indexOfFirst { it.getString("messageId") == response.getString("messageId") }
+        if (i >= 0) {
+            messages[i].put("leido", true)
+            messages[i].put("recibido", true)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onMessageReceived(response: JSONObject) {
+        val i = messages.indexOfFirst { it.getString("messageId") == response.getString("messageId") }
+        if (i >= 0) {
+            messages[i].put("recibido", true)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onStatusUpdated(response: JSONObject) {
+        Log.e("tales5", response.toString(4))
+        val messageIds = response.getJSONArray("messages")
+        for (i in 0 until messageIds.length()) {
+            val id = messageIds.getString(i)
+
+            val index = messages.indexOfFirst { it.getString("messageId") == id }
+            if (index >= 0) {
+                messages[i].put("leido", true)
+                messages[i].put("recibido", true)
+            }
+        }
+
+        adapter.notifyDataSetChanged()
     }
 
     override fun onNotification(notification: JSONObject) {

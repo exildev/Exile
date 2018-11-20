@@ -2,6 +2,7 @@ package co.com.exile.exile.chat.adapter
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,8 @@ internal class MessageListAdapter : RecyclerView.Adapter<MessageListAdapter.Mess
             val prevEmmisorId = if (position > 0) messages[position - 1].getJSONObject("emisor")?.getString("id") else null
             val nextEmmisorId = if (position + 1 < messages.size) messages[position + 1].getJSONObject("emisor")?.getString("id") else null
             val emmisorId = message.getJSONObject("emisor")?.getString("id")
+            val recibido = message.getBoolean("recibido")
+            val leido = message.getBoolean("leido")
 
             if (emmisorId == me) {
                 holder.itemView.apply {
@@ -49,6 +52,17 @@ internal class MessageListAdapter : RecyclerView.Adapter<MessageListAdapter.Mess
                     message_me_constraint.visibility = View.VISIBLE
                     message_you_constraint.visibility = View.GONE
                     this.message.setTextColor(Color.WHITE)
+                    read_status.visibility = View.GONE
+                    if (!recibido) {
+                        read_status.visibility = View.GONE
+                    } else {
+                        read_status.visibility = View.VISIBLE
+                        if (leido) {
+                            read_status.setImageResource(R.drawable.ic_done_all_white)
+                        } else {
+                            read_status.setImageResource(R.drawable.ic_done_white)
+                        }
+                    }
                 }
             } else {
                 holder.itemView.apply {

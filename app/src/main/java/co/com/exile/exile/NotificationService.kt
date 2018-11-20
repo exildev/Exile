@@ -89,6 +89,6 @@ class NotificationService : Service() {
     companion object {
         private const val ACTION_TO_SERVICE = "ToService"
         private const val ACTION_STRING_ACTIVITY = "ToActivity"
-        private const val CHANNEL_ID = "ExileChannel"
+        const val CHANNEL_ID = "ExileChannel"
     }
 }
